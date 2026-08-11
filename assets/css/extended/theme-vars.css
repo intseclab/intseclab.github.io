@@ -42,5 +42,14 @@
   --content-gap:    1.5rem;
   --gap:            1.5rem;
   --main-width:     720px;
+  /* The measure: how wide a line of body text is allowed to get. 35.7rem is
+     68ch at the body font size (1.05rem), which is where this started life.
+
+     It is stated in rem rather than ch on purpose. `ch` resolves against each
+     element's OWN font size, so the same `68ch` produced 571px on body copy and
+     626px on the slightly larger hero tagline -- the two blocks ended 54px
+     apart. An absolute unit makes every block that uses this token line up on
+     the same right edge no matter what size its own text is. */
+  --isl-measure:    35.7rem;
   --radius:         3px;
 }

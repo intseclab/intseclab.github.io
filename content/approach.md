@@ -1,7 +1,5 @@
 ---
 title: "Approach"
-# Justifies this page's body copy. See layouts/partials/extend_head.html.
-justify: true
 ---
 
 ## Strategic Context

@@ -47,21 +47,35 @@ h1, h2, h3 {
 h1 { font-size: 2.4rem; letter-spacing: -0.015em; line-height: 1.2;
      margin-bottom: 1rem; }
 h2 { font-size: 1.45rem; margin-top: 3rem; }
-.post-content p { max-width: 68ch; }
+/* The measure lives on the CONTAINER, not on each paragraph.
 
-/* Looking for the justified text? It is deliberately NOT here.
+   Capping every `p` at 68ch individually looks equivalent and is not. A block
+   that is indented from the left -- the callout, with its 2px rule and 1.5rem
+   of padding -- still got the full 68ch, so its text started 26px in and then
+   ran 26px PAST the right edge of the paragraphs above it. Justified, that
+   overhang is a hard vertical edge sticking out of the page. Constraining the
+   container instead means anything nested inherits the remaining width and ends
+   flush, whatever its indent. Measured after the change: body text, headings
+   and callout text all terminate on the same pixel. */
+.post-content { max-width: var(--isl-measure); }
 
-   Justification is opt-in per page, switched on with `justify: true` in a
-   page's front matter, and the rule that does it lives in
-   layouts/partials/extend_head.html. Only the Approach page sets it today.
+/* Justified body copy, site-wide.
 
-   It is done there rather than in this file because nothing in the rendered
-   markup distinguishes one regular page from another -- Approach and Careers
-   emit identical wrappers, right down to `article.post-single` and
-   `div.post-content.md-content`. Getting a per-page hook into the stylesheet
-   would mean overriding PaperMod's baseof.html to add a body class, which is a
-   third theme file to keep in sync on every upgrade. A conditional block in the
-   head partial we already own costs nothing by comparison. */
+   `hyphens: auto` is not optional alongside this. Justification stretches the
+   spaces between words, so a long word that will not fit drops to the next line
+   and leaves the row it came from visibly gappy -- "transformatively" and
+   "implementation-driven" both do this in the current copy. Hyphenation gives
+   the browser somewhere else to break. It reads the <html lang> attribute,
+   which PaperMod sets to "en".
+
+   Headings stay ragged-right deliberately: they are short enough that
+   justifying them would stretch two or three words across the whole measure. */
+.post-content p,
+.isl-hero .isl-tagline {
+  text-align: justify;
+  hyphens: auto;
+}
+
 strong { font-weight: 600; color: var(--isl-heading); }
 
 a { color: var(--isl-text); text-decoration: none;
@@ -97,8 +111,15 @@ nav a, .logo a, h1 a, h2 a { border-bottom: none; }
 
 /* Hero (home only) */
 .isl-hero { padding: 3rem 0 1rem; }
+/* Shares --isl-measure with .post-content so the tagline ends on the same pixel
+   as the body copy on every other page. It was 60ch, which stopped 19px short
+   of everything else -- near enough to read as a mistake rather than as a
+   deliberately narrower column. Widening it also made the tagline justifiable:
+   at the old width the browser stretched its spaces to 12.1px against a 4.5px
+   norm, and at the full measure that falls to 5.7px. */
 .isl-hero .isl-tagline {
-  font-size: 1.15rem; color: var(--isl-muted); max-width: 60ch; margin-bottom: 2rem;
+  font-size: 1.15rem; color: var(--isl-muted);
+  max-width: var(--isl-measure); margin-bottom: 2rem;
 }
 
 /* Theory-of-impact callout, mirroring the PDF sidebar */
