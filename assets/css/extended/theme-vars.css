@@ -1,46 +1,32 @@
-/* Every colour and font in the site. Change a value here, it changes everywhere.
-   Safe to edit. See README.md. */
-/* Selector note: PaperMod declares its light palette on a bare `:root`
-   (specificity 0,1,0), the same weight as ours. Source order would decide, and
-   this file is concatenated after the theme's -- but that is a thin margin to
-   rely on. Naming `:root[data-theme="light"]` as well (0,2,0) makes us win
-   outright, and matches the shape of the rule PaperMod uses for its own dark
-   palette. Keep both selectors. */
+/* Colours, fonts and metrics. Change a value here, it changes everywhere. */
 :root,
 :root[data-theme="light"] {
-  /* Parchment. Darkening the ground eats contrast at the pale end of the text
-     ramp, so --isl-faint (footer, meta) was darkened along with it to keep the
-     footer above 4.5:1 -- it was heading for 4.6 and falling. If you take the
-     background darker still, check that one first; it is the one that breaks. */
-  --isl-bg:      #f3ede1;
-  --isl-surface: #eae2d2;
-  --isl-text:    #2e2c28;
-  --isl-heading: #1a1916;
-  --isl-muted:   #57544d;
-  --isl-faint:   #67645c;
-  --isl-border:  #dcd2be;
-  --isl-accent:  #1f3a5f;
-  /* Scrollbar thumb. Deliberately darker than --isl-border, which disappears
-     against the track. */
+  --isl-bg:        #f3ede1;
+  --isl-surface:   #eae2d2;
+  --isl-text:      #2e2c28;
+  --isl-heading:   #1a1916;
+  --isl-muted:     #57544d;
+  --isl-faint:     #67645c;
+  --isl-border:    #dcd2be;
+  --isl-accent:    #1f3a5f;
   --isl-scrollbar: #c2b8a3;
 
-  /* Mono is a fallback stack only -- no webfont is shipped for it. Nothing on
-     the site uses it today; it exists so a future code block is not unstyled. */
   --isl-mono:  ui-monospace, SFMono-Regular, Menlo, monospace;
   --isl-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 
-  /* Map PaperMod's own variables onto ours so the theme inherits the palette. */
-  --theme:          var(--isl-bg);
-  --entry:          var(--isl-surface);
-  --primary:        var(--isl-heading);
-  --secondary:      var(--isl-text);
-  --tertiary:       var(--isl-faint);
-  --content:        var(--isl-text);
-  --border:         var(--isl-border);
-  --hljs-bg:        var(--isl-surface);
-  --code-bg:        var(--isl-surface);
-  --content-gap:    1.5rem;
-  --gap:            1.5rem;
-  --main-width:     720px;
-  --radius:         3px;
+  /* PaperMod's own variables, mapped onto ours. */
+  --theme:       var(--isl-bg);
+  --entry:       var(--isl-surface);
+  --primary:     var(--isl-heading);
+  --secondary:   var(--isl-text);
+  --tertiary:    var(--isl-faint);
+  --content:     var(--isl-text);
+  --border:      var(--isl-border);
+  --hljs-bg:     var(--isl-surface);
+  --code-bg:     var(--isl-surface);
+  --content-gap: 1.5rem;
+  --gap:         1.5rem;
+  --main-width:  720px;
+  --isl-measure: 35.7rem;  /* rem, not ch: ch varies with each element's font size */
+  --radius:      3px;
 }

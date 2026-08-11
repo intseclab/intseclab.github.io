@@ -1,3 +1,6 @@
+/* Custom CSS for the Ashby job board. Not part of the Hugo build — upload it by
+   hand in the Ashby console (Job Board settings). Palette is duplicated from
+   assets/css/extended/theme-vars.css; keep the two in sync. */
 
 @font-face {
   font-family: "Source Serif 4";
@@ -22,52 +25,26 @@
 }
 
 :root {
-  /* Parchment, matching --isl-bg. This is the single most important line in
-     the file: it is what stops the embed reading as a white box. */
   --colorAppBackground: #f3ede1;
 
-  /* Deep navy, matching --isl-accent, and a lighter step for hover and
-     secondary states (6.6:1 on parchment, so it is safe on text too).
-
-     `!important` is REQUIRED here and nowhere else in this file. The Ashby
-     admin theme injects its own values as an inline style attribute on <html>
-     ("--colorPrimary600: #6059b2; --colorPrimary900: #1d1b3e;"), and an inline
-     declaration outranks any normal stylesheet rule no matter how specific.
-     Verified against the live board: without `!important` these lose and the
-     board renders in Ashby's default indigo; with it, they win.
-
-     Because this file now overrides the admin, changing the colour in the
-     Ashby theme settings will appear to do nothing. If you would rather drive
-     the colour from the admin -- which is the better option, see the note on
-     the Apply button below -- delete these two lines. */
+  /* !important is required: the Ashby admin theme sets these inline on <html>. */
   --colorPrimary900: #1f3a5f !important;
   --colorPrimary600: #2d5486 !important;
 
   --fontFamily: "Source Serif 4", Georgia, "Times New Roman", serif;
 
-  /* 3px, matching --radius. Ashby's default is 10px, which reads much softer
-     than the rest of the site. */
   --borderRadiusContainer: 3px;
   --borderRadiusControl: 3px;
   --borderRadiusButton: 3px;
 
-  /* 720px, matching --main-width, so the board lines up with the prose above
-     it rather than running wider. */
   --widthMaxJobBoard: 720px;
 }
 
-/* Ashby's default body text is a cool blue-grey (#373e4d) that reads wrong
-   against a warm ground. No variable covers it, so set it once on `body` --
-   the uploaded file is served as an ordinary stylesheet, so plain selectors
-   work and we are not limited to the documented `.ashby-*` hooks. */
 body {
   color: #2e2c28;
 }
 
-/* ── Text colours ──
-   No variable covers these, so each is set through its class hook. Values are
-   --isl-heading, --isl-text, --isl-muted and --isl-faint respectively. */
-
+/* ── Text ── */
 .ashby-job-board-heading {
   color: #1a1916;
   font-weight: 600;
@@ -98,12 +75,7 @@ body {
   color: #67645c;
 }
 
-/* ── Surfaces ──
-   Each posting sits in its own card. Ashby's default gives it a white fill,
-   which would put white rectangles back on the parchment one level down from
-   the problem this file exists to solve. A hairline border in --isl-border
-   does the separating instead, matching how the site marks edges elsewhere
-   (the callout rule, the Careers button). */
+/* ── Surfaces ── */
 .ashby-job-posting-brief {
   background: transparent;
   border: 1px solid #dcd2be;
@@ -116,15 +88,7 @@ body {
   color: #2e2c28;
 }
 
-/* ── Panels behind the list view ──
-   `--colorAppBackground` only paints the outermost page. Click into a posting
-   or the application form and several inner panels have their own white fill,
-   which is what made those views look bolted on rather than themed. Each was
-   found by auditing computed styles on the live board; all of them have stable
-   hooks, so none of this depends on Ashby's hashed CSS-module class names.
-
-   Transparent rather than parchment-coloured: it is one value fewer to keep in
-   sync, and it lets --colorAppBackground remain the single source of truth. */
+/* Inner panels default to white, one level in from --colorAppBackground. */
 .ashby-job-posting-left-pane,
 .ashby-job-posting-description-container,
 .ashby-application-form-container,
@@ -133,19 +97,13 @@ body {
   background-color: transparent;
 }
 
-/* The resume drag-and-drop overlays are deliberately translucent, so they need
-   a colour rather than `transparent` -- otherwise the text they are meant to
-   veil shows straight through. Parchment at the same alpha Ashby used. */
+/* Translucent overlays: need a colour, not transparent. */
 .ashby-application-form-autofill-input-drag-layer,
 .ashby-application-form-autofill-input-pending-layer {
   background-color: rgba(243, 237, 225, 0.92);
 }
 
-/* ── Form fields ──
-   The inputs are transparent with a cool blue-grey border, which survives the
-   background change but clashes with the warm ground. A warm mid-tone keeps
-   enough presence to still read as an editable control -- --isl-border is too
-   faint for that job here. */
+/* ── Form fields ── */
 .ashby-application-form-container input,
 .ashby-application-form-container textarea,
 .ashby-application-form-container select {
@@ -153,9 +111,6 @@ body {
   color: #2e2c28;
 }
 
-/* The resume upload is a native file control, which ignores the inherited
-   font until told directly. ::file-selector-button reaches the browser-drawn
-   button inside it. */
 input[type="file"] {
   font-family: inherit;
   color: #2e2c28;
@@ -192,3 +147,6 @@ input[type="file"]::file-selector-button {
 .ashby-application-form-texting-consent-description {
   color: #57544d;
 }
+
+/* The "Apply for this Job" button has no ashby-* hook and cannot be restyled
+   here; set the theme's primary colour in the Ashby admin instead. */

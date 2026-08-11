@@ -19,25 +19,3 @@
     font-display: swap; src: url("{{ $italic.RelPermalink }}") format("woff2");
   }
 </style>
-
-{{/* Per-page justified body copy. Set `justify: true` in a page's front matter
-     to turn it on; leave it out and the page stays ragged-right.
-
-     This partial is included at the END of PaperMod's head.html, after the main
-     stylesheet link, so a plain rule here outranks the stylesheet without
-     needing !important. Check that ordering still holds if PaperMod is upgraded.
-
-     Scoped to `.post-content p`, which deliberately excludes the home page's
-     hero tagline: at that narrower measure justification stretched its spaces
-     to 12.1px against a 4.5px norm in body copy, which showed as obvious rivers.
-
-     `hyphens: auto` is not optional here. Justification stretches the spaces
-     between words, so a long word that will not fit drops to the next line and
-     leaves the row it came from gappy -- "transformatively" and
-     "implementation-driven" both do this in the current copy. Hyphenation gives
-     the browser somewhere else to break. It reads <html lang>, which is "en". */}}
-{{- if .Params.justify }}
-<style>
-  .post-content p { text-align: justify; hyphens: auto; }
-</style>
-{{- end }}
