@@ -26,7 +26,11 @@
   --code-bg:     var(--isl-surface);
   --content-gap: 1.5rem;
   --gap:         1.5rem;
-  --main-width:  720px;
   --isl-measure: 35.7rem;  /* rem, not ch: ch varies with each element's font size */
+  /* Content column and nav both take the measure, so the text sits centred on
+     the page. At PaperMod's 720px the 571px column was flush-left inside it and
+     all the slack fell on the right, pushing the text 82px off centre. */
+  --main-width:  var(--isl-measure);
+  --nav-width:   var(--isl-measure);
   --radius:      3px;
 }
