@@ -1,0 +1,9 @@
+{{- define "main" }}
+<div class="isl-hero">
+  <h1>{{ .Site.Params.headline }}</h1>
+  <p class="isl-tagline">{{ .Site.Params.tagline }}</p>
+</div>
+<div class="post-content">
+  {{ .Content }}
+</div>
+{{- end }}

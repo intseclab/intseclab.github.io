@@ -1,0 +1,10 @@
+{{- $org := .Site.Params.ashbyOrg -}}
+{{- $board := printf "https://jobs.ashbyhq.com/%s" $org -}}
+<div id="ashby_embed"></div>
+<script>
+  window.__ashbyBaseJobBoardUrl = {{ $board }};
+</script>
+<script id="ashby-script" src="{{ printf "%s/embed?version=2" $board }}"></script>
+<div class="isl-careers-fallback">
+  <a href="{{ $board }}">View openings on Ashby ↗</a>
+</div>

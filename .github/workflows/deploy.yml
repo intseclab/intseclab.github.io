@@ -1,9 +1,10 @@
-name: Deploy Static HTML
+name: Deploy Hugo site to Pages
 
 on:
   push:
     branches:
-      - main  # or master, depending on your default branch
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,15 +17,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.164.0'
+          extended: true
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+
+      - name: Build
+        run: hugo --gc --minify
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
-      
+          path: './public'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
