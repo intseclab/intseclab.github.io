@@ -1,0 +1,131 @@
+/* ISL layout and components. Structural — edit only if you know CSS. */
+
+/* PaperMod's reset sets `html { overflow-y: scroll }`, so a scrollbar gutter is
+   reserved on every page whether or not there is anything to scroll. That is
+   deliberate on their part -- it stops the centred content jumping sideways as
+   you move between a page that scrolls and one that does not -- so leave it be.
+
+   The gutter is painted by the browser rather than by our background, and at
+   the default `scrollbar-color: auto` under `color-scheme: light` it comes out
+   white, which shows as a pale stripe down the right-hand edge of the parchment.
+   Naming the two colours (thumb first, then track) settles it.
+
+   Firefox and Chromium honour this; Safari ignores it but uses overlay
+   scrollbars, so it has no persistent track to mis-paint in the first place. */
+html {
+  scrollbar-color: var(--isl-scrollbar) var(--isl-bg);
+}
+
+body {
+  background-color: var(--isl-bg);
+  color: var(--isl-text);
+  font-family: var(--isl-serif);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+/* PaperMod puts `.list` on <body> for the home page and any list page, and
+   styles it `background: var(--code-bg)` -- a class selector, which outranks
+   the bare `body` rule above. On the dark theme a `[data-theme="dark"] .list`
+   rule happened to override it back; the light theme has no such rule, so
+   without this the home page would render on the surface tone while the inner
+   pages render on the page tone. `body.list` (0,1,1) beats `.list` (0,1,0).
+   Fixing it here rather than by pointing --code-bg at the background, which
+   would flatten code blocks against the page. */
+body.list { background: var(--isl-bg); }
+
+h1, h2, h3 {
+  font-family: var(--isl-serif);
+  font-weight: 600;
+  color: var(--isl-heading);
+}
+/* The old mono h1 sat directly on the text below it with no bottom margin and
+   looked deliberate. At serif proportions that reads as crowding, so give it
+   room. Where an h2 follows immediately (the inner pages, whose first element
+   after the title is a heading) the two margins collapse to the h2's larger
+   3rem, which is what we want there. */
+h1 { font-size: 2.4rem; letter-spacing: -0.015em; line-height: 1.2;
+     margin-bottom: 1rem; }
+h2 { font-size: 1.45rem; margin-top: 3rem; }
+.post-content p { max-width: 68ch; }
+
+/* Looking for the justified text? It is deliberately NOT here.
+
+   Justification is opt-in per page, switched on with `justify: true` in a
+   page's front matter, and the rule that does it lives in
+   layouts/partials/extend_head.html. Only the Approach page sets it today.
+
+   It is done there rather than in this file because nothing in the rendered
+   markup distinguishes one regular page from another -- Approach and Careers
+   emit identical wrappers, right down to `article.post-single` and
+   `div.post-content.md-content`. Getting a per-page hook into the stylesheet
+   would mean overriding PaperMod's baseof.html to add a body class, which is a
+   third theme file to keep in sync on every upgrade. A conditional block in the
+   head partial we already own costs nothing by comparison. */
+strong { font-weight: 600; color: var(--isl-heading); }
+
+a { color: var(--isl-text); text-decoration: none;
+    border-bottom: 1px solid var(--isl-border); transition: border-color 0.2s; }
+a:hover { border-color: var(--isl-accent); }
+nav a, .logo a, h1 a, h2 a { border-bottom: none; }
+
+/* PaperMod gives .main a min-height of very nearly the full viewport, which
+   pins the footer to the bottom of the screen. On the inner pages the content
+   is longer than that and the rule never bites. The home page is now just a
+   headline and a tagline, so it did bite, stranding the footer a long way below
+   the text. Shrink it there.
+
+   The value has two regimes, and it needs both. A pure percentage scales the
+   emptiness with the window: 60vh looked right on a 780px-tall laptop (a 117px
+   gap) and awful on a 1730px-tall monitor, where the same rule opened a 690px
+   hole. A pure pixel value crowds the hero on a short window. `min()` takes the
+   percentage while the window is short and the cap once it is tall, holding the
+   gap at a steady ~170px on anything above roughly 745px.
+
+   What this cannot fix: the page has about 350px of content, so on a very tall
+   window it will visibly end partway down, with parchment below the footer.
+   That emptiness has to go somewhere, and below the footer is the less jarring
+   place for it -- a gap between the text and the footer reads as a mistake in a
+   way that space after the footer does not. Raise the cap if you would rather
+   push the footer further down.
+
+   `:has()` targets the home page by the element only it contains -- more
+   precise than `body.list`, which PaperMod would also apply to any list page
+   added later. Browsers without `:has()` ignore the rule and get the old
+   full-height behaviour, which is fine. */
+.main:has(.isl-hero) { min-height: min(70vh, 520px); }
+
+/* Hero (home only) */
+.isl-hero { padding: 3rem 0 1rem; }
+.isl-hero .isl-tagline {
+  font-size: 1.15rem; color: var(--isl-muted); max-width: 60ch; margin-bottom: 2rem;
+}
+
+/* Theory-of-impact callout, mirroring the PDF sidebar */
+.isl-callout {
+  border-left: 2px solid var(--isl-border); padding: 0.5rem 0 0.5rem 1.5rem;
+  margin: 2.5rem 0;
+}
+.isl-callout > h3 {
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+
+/* Careers */
+.isl-careers-fallback { margin-top: 2rem; }
+.isl-careers-fallback a {
+  display: inline-block; padding: 0.75rem 1.25rem;
+  border: 1px solid var(--isl-border); border-bottom: 1px solid var(--isl-border);
+  border-radius: var(--radius);
+}
+.isl-careers-fallback a:hover { border-color: var(--isl-accent); }
+
+footer.footer {
+  color: var(--isl-faint); font-size: 0.8rem;
+  text-align: center; line-height: 2;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+  .isl-hero .isl-tagline { font-size: 1.05rem; }
+}

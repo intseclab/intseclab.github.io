@@ -1,0 +1,13 @@
+{{/*
+  Bordered sidebar callout, mirroring the strategy PDF's "Theory of impact" box.
+  Usage: {{< callout title="Theory of impact" >}} ...markdown... {{< /callout >}}
+
+  .Inner MUST stay hand-written markdown. Do not nest a shortcode inside this
+  one, and do not hand it raw HTML.
+
+  If you need markup inside a callout, write it as markdown.
+*/}}
+<aside class="isl-callout">
+  <h3>{{ .Get "title" }}</h3>
+  {{ .Inner | markdownify }}
+</aside>
