@@ -54,3 +54,5 @@ to another actor when needed. We do not expect to become the world's producer
 of secure compute. Rather, we expect others to make foreseeable mistakes, and
 therefore we must find and preempt such mistakes.
 {{< /callout >}}
+
+If this sounds exciting to you, [we're hiring](/careers/)!
