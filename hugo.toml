@@ -47,11 +47,6 @@ disableKinds = ["taxonomy", "term"]
 
 [menu]
   [[menu.main]]
-    identifier = "approach"
-    name       = "Approach"
-    url        = "/approach/"
-    weight     = 10
-  [[menu.main]]
     identifier = "careers"
     name       = "Careers"
     url        = "/careers/"
