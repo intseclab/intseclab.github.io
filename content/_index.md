@@ -30,7 +30,7 @@ as a holistic system, will not have been proven secure. Someone must own the
 whole problem as an integrator, and we aim to fill that role.
 
 We think that solving this problem requires methodological innovation. We are
-applying STPA-Sec in a way it wasn't quite designed for. We are leveraging AI
+applying STPA-Sec (described below) in a way it wasn't quite designed for. We are leveraging AI
 design tools without compromising the integrity of the design process. We are
 using formal methods and other high-assurance approaches everywhere we can.
 This project is more like avionics or reactor control than enterprise software
