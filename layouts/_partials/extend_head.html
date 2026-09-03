@@ -1,0 +1,27 @@
+{{- $plex   := resources.Get "fonts/IBMPlexSerif-SemiBold.woff2" -}}
+{{- $merri  := resources.Get "fonts/Merriweather-Regular.woff2" -}}
+{{- $merriB := resources.Get "fonts/Merriweather-Bold.woff2" -}}
+{{- $merriI := resources.Get "fonts/Merriweather-Italic.woff2" -}}
+{{/* Both preloaded faces render in the first viewport: the hero h1 is Plex,
+     the tagline is Merriweather. Bold and italic are wanted a beat later and
+     on far fewer glyphs, so preloading them would compete. */}}
+<link rel="preload" as="font" type="font/woff2" href="{{ $merri.RelPermalink }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ $plex.RelPermalink }}" crossorigin>
+<style>
+  @font-face {
+    font-family: "IBM Plex Serif"; font-style: normal; font-weight: 600;
+    font-display: swap; src: url("{{ $plex.RelPermalink }}") format("woff2");
+  }
+  @font-face {
+    font-family: "Merriweather"; font-style: normal; font-weight: 400;
+    font-display: swap; src: url("{{ $merri.RelPermalink }}") format("woff2");
+  }
+  @font-face {
+    font-family: "Merriweather"; font-style: normal; font-weight: 700;
+    font-display: swap; src: url("{{ $merriB.RelPermalink }}") format("woff2");
+  }
+  @font-face {
+    font-family: "Merriweather"; font-style: italic; font-weight: 400;
+    font-display: swap; src: url("{{ $merriI.RelPermalink }}") format("woff2");
+  }
+</style>

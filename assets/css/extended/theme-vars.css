@@ -1,10 +1,10 @@
 /* Colours, fonts and metrics. Change a value here, it changes everywhere. */
 :root,
 :root[data-theme="light"] {
-  --isl-bg:        #f3ede1;
+  --isl-bg:        #FDF2E6;
   --isl-surface:   #eae2d2;
   --isl-text:      #2e2c28;
-  --isl-heading:   #1a1916;
+  --isl-heading:   #1F1E1B;
   --isl-muted:     #57544d;
   --isl-faint:     #67645c;
   --isl-border:    #dcd2be;
@@ -12,7 +12,8 @@
   --isl-scrollbar: #c2b8a3;
 
   --isl-mono:  ui-monospace, SFMono-Regular, Menlo, monospace;
-  --isl-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --isl-heading-font: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --isl-body-font:    "Merriweather", Georgia, "Times New Roman", serif;
 
   /* PaperMod's own variables, mapped onto ours. */
   --theme:       var(--isl-bg);

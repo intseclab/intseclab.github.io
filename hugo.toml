@@ -16,7 +16,6 @@ disableKinds = ["taxonomy", "term"]
 #  See README.md for a plain-English guide.
 # ─────────────────────────────────────────────────────────────────────────
 [params]
-  logoText     = "Intelligence Security Laboratories"
   headline     = "Building secure infrastructure for transformative AI"
   tagline      = "We are a nonprofit research lab focused on implementation-driven R&D for high-security AI systems. Our work bridges the gap between theoretical security requirements and practical deployments."
   contactEmail = "hello@intseclab.org"
@@ -40,6 +39,9 @@ disableKinds = ["taxonomy", "term"]
   ShowWordCount       = false
   disableScrollToTop  = true
   hidemeta            = true
+
+  [params.label]
+    text = "Intelligence Security Laboratories"
 
   [params.assets]
     disableHLJS  = true
