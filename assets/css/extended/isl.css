@@ -7,8 +7,8 @@ html {
 body {
   background-color: var(--isl-bg);
   color: var(--isl-text);
-  font-family: var(--isl-serif);
-  font-size: 1.05rem;
+  font-family: var(--isl-body-font);
+  font-size: 0.95rem;
   line-height: 1.65;
 }
 
@@ -16,7 +16,7 @@ body {
 body.list { background: var(--isl-bg); }
 
 h1, h2, h3 {
-  font-family: var(--isl-serif);
+  font-family: var(--isl-heading-font);
   font-weight: 600;
   color: var(--isl-heading);
 }
@@ -33,12 +33,14 @@ h2 { font-size: 1.45rem; margin-top: 3rem; }
   hyphens: auto;
 }
 
-strong { font-weight: 600; color: var(--isl-heading); }
+strong { font-weight: 700; color: var(--isl-heading); }
 
 a { color: var(--isl-text); text-decoration: none;
     border-bottom: 1px solid var(--isl-border); transition: border-color 0.2s; }
 a:hover { border-color: var(--isl-accent); }
 nav a, .logo a, h1 a, h2 a { border-bottom: none; }
+
+.logo a svg { display: block; height: 40px; width: auto; border-radius: 0; }
 
 /* Trims PaperMod's near-full-viewport min-height on the sparse home page. */
 .main:has(.isl-hero) { min-height: min(70vh, 520px); }
