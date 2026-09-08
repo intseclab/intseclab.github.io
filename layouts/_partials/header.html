@@ -4,6 +4,9 @@
     end of the menu list, which appears only when params.substackURL is set.
     The URL is the switch: there is no separate boolean to fall out of sync.
 
+    The logo and menu hrefs use relLangURL, not the theme's absLangURL, so nav
+    links stay on whatever domain the visitor is already on.
+
     Re-check this file whenever PaperMod is upgraded: the theme folder is
     replaced wholesale, and this copy will silently keep serving the old markup.
 */}}
@@ -12,7 +15,7 @@
         <div class="logo">
             {{- $label_text := (site.Params.label.text | default site.Title) }}
             {{- if site.Title }}
-            <a href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)">
+            <a href="{{ "" | relLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)">
                 {{/* ISL divergence: inlines the brand lockup SVG instead of the theme's icon+text-label markup. */}}
                 {{- with resources.Get "img/logo-lockup.svg" }}{{ .Content | safeHTML }}{{ end -}}
             </a>
@@ -77,7 +80,7 @@
             {{- $page_url:= $currentPage.Permalink | absLangURL }}
             {{- $is_search := eq (site.GetPage .KeyName).Layout `search` }}
             <li>
-                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
+                <a href="{{ .URL | relLangURL }}" title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
                     <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
                         {{- .Pre }}
