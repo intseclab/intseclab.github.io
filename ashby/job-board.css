@@ -3,35 +3,42 @@
    assets/css/extended/theme-vars.css; keep the two in sync. */
 
 @font-face {
-  font-family: "Source Serif 4";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("https://intseclab.org/fonts/SourceSerif4-Regular.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Source Serif 4";
+  font-family: "IBM Plex Serif";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("https://intseclab.org/fonts/SourceSerif4-Semibold.woff2") format("woff2");
+  src: url("https://intseclab.org/fonts/IBMPlexSerif-SemiBold.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://intseclab.org/fonts/Merriweather-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://intseclab.org/fonts/Merriweather-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("https://intseclab.org/fonts/SourceSerif4-Italic.woff2") format("woff2");
+  src: url("https://intseclab.org/fonts/Merriweather-Italic.woff2") format("woff2");
 }
 
 :root {
-  --colorAppBackground: #f3ede1;
+  --colorAppBackground: #FDF2E6;
 
   /* !important is required: the Ashby admin theme sets these inline on <html>. */
-  --colorPrimary900: #1f3a5f !important;
-  --colorPrimary600: #2d5486 !important;
+  --colorPrimary900: #474A62 !important;
+  --colorPrimary600: #757789 !important;
 
-  --fontFamily: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --fontFamily: "Merriweather", Georgia, "Times New Roman", serif;
 
   --borderRadiusContainer: 3px;
   --borderRadiusControl: 3px;
@@ -41,12 +48,13 @@
 }
 
 body {
-  color: #2e2c28;
+  color: #1F1E1B;
 }
 
 /* ── Text ── */
 .ashby-job-board-heading {
-  color: #1a1916;
+  color: #474A62;
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
   font-weight: 600;
 }
 
@@ -56,13 +64,15 @@ body {
 
 .ashby-department-heading,
 .ashby-job-posting-brief-department-heading {
-  color: #1a1916;
+  color: #474A62;
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
   font-weight: 600;
 }
 
 .ashby-job-posting-brief-title,
 .ashby-job-posting-heading {
-  color: #1a1916;
+  color: #474A62;
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
   font-weight: 600;
 }
 
@@ -82,9 +92,9 @@ body {
 .ashby-job-posting-brief,
 .ashby-job-board-filter,
 .ashby-job-board-filter select {
-  background-color: #fdfbf7;
+  background-color: #FFFCF8;
   border: 1px solid #cfc3a9;
-  color: #2e2c28;
+  color: #1F1E1B;
 }
 
 .ashby-job-posting-brief {
@@ -103,7 +113,7 @@ body {
 /* Translucent overlays: need a colour, not transparent. */
 .ashby-application-form-autofill-input-drag-layer,
 .ashby-application-form-autofill-input-pending-layer {
-  background-color: rgba(243, 237, 225, 0.92);
+  background-color: rgba(253, 242, 230, 0.92);
 }
 
 /* ── Form fields ──
@@ -113,24 +123,24 @@ body {
 .ashby-application-form-container input,
 .ashby-application-form-container textarea,
 .ashby-application-form-container select {
-  background-color: #fdfbf7;
+  background-color: #FFFCF8;
   border-color: #cfc3a9;
-  color: #2e2c28;
+  color: #1F1E1B;
 }
 
 /* Yes/No toggles, plus the per-field Upload File button. Ashby's unselected
-   label is #a8aebd, which is 1.9:1 against parchment — unreadable. The selected
+   label is #a8aebd, which is 2:1 against parchment — unreadable. The selected
    state is left alone: it carries an _active_ class that paints itself in
    --colorPrimary900 at a higher specificity than this rule, so it still wins. */
 .ashby-application-form-field-entry button {
-  background-color: #fdfbf7;
+  background-color: #FFFCF8;
   border-color: #cfc3a9;
   color: #67645c;
 }
 
 input[type="file"] {
   font-family: inherit;
-  color: #2e2c28;
+  color: #1F1E1B;
 }
 
 input[type="file"]::file-selector-button {
@@ -138,25 +148,25 @@ input[type="file"]::file-selector-button {
   background-color: transparent;
   border: 1px solid #b3a894;
   border-radius: 3px;
-  color: #2e2c28;
+  color: #1F1E1B;
 }
 
 /* ── Controls ── */
 .ashby-application-form-submit-button {
-  background-color: #1f3a5f;
-  color: #f3ede1;
+  background-color: #474A62;
+  color: #FDF2E6;
   border-radius: 3px;
-  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
 }
 
 .ashby-job-board-back-to-all-jobs-button {
   border-radius: 3px;
-  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
 }
 
 .ashby-application-form-question-title,
 .ashby-application-form-section-header-title {
-  color: #1a1916;
+  color: #474A62;
 }
 
 .ashby-application-form-question-description,

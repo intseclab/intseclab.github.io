@@ -3,12 +3,12 @@
 :root[data-theme="light"] {
   --isl-bg:        #FDF2E6;
   --isl-surface:   #eae2d2;
-  --isl-text:      #2e2c28;
-  --isl-heading:   #1F1E1B;
+  --isl-text:      #1F1E1B;
+  --isl-heading:   #474A62;
   --isl-muted:     #57544d;
   --isl-faint:     #67645c;
   --isl-border:    #dcd2be;
-  --isl-accent:    #1f3a5f;
+  --isl-accent:    #474A62;
   --isl-scrollbar: #c2b8a3;
 
   --isl-mono:  ui-monospace, SFMono-Regular, Menlo, monospace;

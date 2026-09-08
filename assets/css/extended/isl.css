@@ -40,6 +40,8 @@ a { color: var(--isl-text); text-decoration: none;
 a:hover { border-color: var(--isl-accent); }
 nav a, .logo a, h1 a, h2 a { border-bottom: none; }
 
+/* The lockup is currentColor, so the logo tracks the heading blue. */
+.logo a { color: var(--isl-heading); }
 .logo a svg { display: block; height: 40px; width: auto; border-radius: 0; }
 
 /* Trims PaperMod's near-full-viewport min-height on the sparse home page. */
