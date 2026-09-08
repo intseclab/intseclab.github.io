@@ -40,12 +40,22 @@ disableKinds = ["taxonomy", "term"]
   disableScrollToTop  = true
   hidemeta            = true
 
+  # Site-wide social card, relative to static/
+  images = ["og-card.png"]
+
   [params.label]
     text = "Intelligence Security Laboratories"
 
   [params.assets]
-    disableHLJS  = true
-    favicon      = "/favicon.ico"
+    disableHLJS             = true
+    favicon                 = "/favicon.ico"
+    favicon16x16            = "/favicon-16x16.png"
+    favicon32x32            = "/favicon-32x32.png"
+    apple_touch_icon        = "/apple-touch-icon.png"
+    safari_pinned_tab       = "/safari-pinned-tab.svg"
+    # Both match --isl-bg; without them PaperMod emits a dark #2e2e33 default.
+    theme_color             = "#FDF2E6"
+    msapplication_TileColor = "#FDF2E6"
 
 [menu]
   [[menu.main]]
