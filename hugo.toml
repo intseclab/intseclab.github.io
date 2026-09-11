@@ -29,16 +29,17 @@ disableKinds = ["taxonomy", "term"]
   substackURL  = ""
 
   # ── Theme behaviour. Rarely changed. ──
-  defaultTheme        = "light"
-  disableThemeToggle  = true
-  ShowReadingTime     = false
-  ShowShareButtons    = false
-  ShowPostNavLinks    = false
-  ShowBreadCrumbs     = false
-  ShowCodeCopyButtons = false
-  ShowWordCount       = false
-  disableScrollToTop  = true
-  hidemeta            = true
+  defaultTheme            = "light"
+  disableThemeToggle      = true
+  disableAnchoredHeadings = true
+  ShowReadingTime         = false
+  ShowShareButtons        = false
+  ShowPostNavLinks        = false
+  ShowBreadCrumbs         = false
+  ShowCodeCopyButtons     = false
+  ShowWordCount           = false
+  disableScrollToTop      = true
+  hidemeta                = true
 
   # Site-wide social card, relative to static/
   images = ["og-card.png"]
@@ -58,6 +59,12 @@ disableKinds = ["taxonomy", "term"]
     msapplication_TileColor = "#FDF2E6"
 
 [menu]
+  [[menu.main]]
+    identifier = "team"
+    name       = "Our Team"
+    url        = "/team/"
+    weight     = 10
+
   [[menu.main]]
     identifier = "careers"
     name       = "Careers"
