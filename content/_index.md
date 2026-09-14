@@ -24,7 +24,7 @@ difficult in ways that are hard to anticipate. By confronting these
 challenges early, we uncover problems with enough lead time to solve them and
 build key practical knowledge before it's required.
 
-We think that this is hard and requires a new focused research and development
+We think that this requires a new focused research and development
 effort. Even if each component is investigated deeply, the secure data center,
 as a holistic system, will not have been proven secure. Someone must own the
 whole problem as an integrator, and we aim to fill that role.

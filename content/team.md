@@ -6,7 +6,7 @@ title: "Our Team"
 
 ### Gabriel Kulp, Executive Director
 
-Before founding ISL, Gabriel was a fellow at RAND working on exploring
+Before founding ISL, Gabriel was a fellow at RAND working on
 hardware-enabled governance mechanisms for GPU export controls and on
 international verification of agreements. In conjunction with his work at
 ISL, he mentors researchers via MATS, Heron, Pivotal, and other programs. He
