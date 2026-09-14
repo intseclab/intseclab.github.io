@@ -1,4 +1,5 @@
-baseURL = "https://intseclab.org/"
+# intseclab.org 301s here and stays the email domain. Split is intentional.
+baseURL = "https://intelligencesecuritylaboratories.org/"
 # `locale`, not `languageCode`: the latter was deprecated in Hugo v0.158.0 and
 # emits a WARN, which the "site builds cleanly" check treats as a failure.
 locale = "en-us"
