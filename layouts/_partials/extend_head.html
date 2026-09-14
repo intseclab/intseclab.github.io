@@ -1,16 +1,21 @@
-{{- $plex   := resources.Get "fonts/IBMPlexSerif-SemiBold.woff2" -}}
-{{- $merri  := resources.Get "fonts/Merriweather-Regular.woff2" -}}
-{{- $merriB := resources.Get "fonts/Merriweather-Bold.woff2" -}}
-{{- $merriI := resources.Get "fonts/Merriweather-Italic.woff2" -}}
-{{/* Both preloaded faces render in the first viewport: the hero h1 is Plex,
+{{/* PaperMod's head emits no manifest, so Android and PWA never see the
+     192/512 icons. Declared here alongside the fonts. */}}
+<link rel="manifest" href="/site.webmanifest">
+{{- $algebra := resources.Get "fonts/AlgebraDisplay-RegularNo2-Web.woff2" -}}
+{{- $merri   := resources.Get "fonts/Merriweather-Regular.woff2" -}}
+{{- $merriB  := resources.Get "fonts/Merriweather-Bold.woff2" -}}
+{{- $merriI  := resources.Get "fonts/Merriweather-Italic.woff2" -}}
+{{/* Both preloaded faces render in the first viewport: the hero h1 is Algebra,
      the tagline is Merriweather. Bold and italic are wanted a beat later and
      on far fewer glyphs, so preloading them would compete. */}}
 <link rel="preload" as="font" type="font/woff2" href="{{ $merri.RelPermalink }}" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="{{ $plex.RelPermalink }}" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{{ $algebra.RelPermalink }}" crossorigin>
 <style>
+  {{/* Algebra ships as a single Regular No.2 cut. Declared at 400 and used at
+       400 so the browser never synthesises a bold it has no cut for. */}}
   @font-face {
-    font-family: "IBM Plex Serif"; font-style: normal; font-weight: 600;
-    font-display: swap; src: url("{{ $plex.RelPermalink }}") format("woff2");
+    font-family: "Algebra"; font-style: normal; font-weight: 400;
+    font-display: swap; src: url("{{ $algebra.RelPermalink }}") format("woff2");
   }
   @font-face {
     font-family: "Merriweather"; font-style: normal; font-weight: 400;
