@@ -3,9 +3,8 @@ title: "About"
 heading: "What we're doing, and why"
 # /approach/ pointed at this copy when it lived on the home page.
 aliases: ["/approach/"]
-# Standfirst under the H1. Verbatim the paragraph that opened "What is ISL
-# doing?" below — kept whole so no approved wording is lost. The home page
-# carried an 89%-identical copy of it; this is the single home for it.
+# Standfirst under the H1. Moved from the section below, where it was the
+# opening paragraph; the home page carried a near-identical copy.
 lede: >-
   ISL exists to develop and demonstrate the required level of security for
   critical AI deployments in advance of when it's needed. We expect this to be
@@ -22,26 +21,26 @@ insecure model could be tampered with or stolen by adversary nation-state
 actors, other AIs, or itself. Navigating transformative AI safely may depend on
 frontier models remaining secure from tampering and theft.
 
-We expect that, in making their infrastructure secure, they will reach for the
-most available off-the-shelf solutions and that these solutions will likely
-fail. Highly capable adversaries will almost certainly find and exploit flaws,
-and we cannot count on noticing this happening.
+In securing that infrastructure, they will reach for the most available
+off-the-shelf solutions, and those solutions are likely to fail. Highly capable
+adversaries will almost certainly find and exploit flaws, and we cannot count on
+noticing this happening.
 
-## What is ISL doing?
+## The approach
 
-<!-- The paragraph that opened this section is now the page standfirst; see
-     `lede` in the front matter. Do not reinstate it here. -->
+<!-- Opening paragraph moved to the `lede` front matter. Don't reinstate it. -->
 
-This requires a new focused research and development
-effort. Even if each component is investigated deeply, the secure data center,
-as a holistic system, will not have been proven secure. Someone must own the
-whole problem as an integrator, and we aim to fill that role.
+Even if each component is investigated deeply, the secure data center, as a
+holistic system, remains unproven. Someone must own the whole problem as an
+integrator. That is ISL's role, and it requires a new, focused research and
+development effort.
 
-Solving this problem requires methodological innovation. We are
-applying STPA-Sec (described below) in a way it wasn't quite designed for. We are leveraging AI
-design tools without compromising the integrity of the design process. We are
-using formal methods and other high-assurance approaches everywhere we can.
-This project is more like avionics or reactor control than enterprise software
+Solving this problem requires methodological innovation. ISL applies STPA-Sec
+(described below) in ways it was not quite designed for, and pushes formal
+methods and other high-assurance approaches as far as they reach. AI design
+tools accelerate that work without compromising its integrity.
+
+This work is closer to avionics or reactor control than to enterprise software
 or red teaming.
 
 STPA-Sec (Systems-Theoretic Process Analysis for Security) makes this feasible.
@@ -57,10 +56,10 @@ generate immediate value: activating & training relevant talent, communicating
 feasibility to policymakers, and facilitating discourse around high-assurance
 frontier AI.
 
-**Hand-off:** We can generate knowledge and technical artifacts, then hand them
-to another actor when needed. We do not expect to become the world's producer
-of secure compute. Rather, we expect others to make foreseeable mistakes, and
-therefore we must find and preempt such mistakes.
+**Hand-off:** ISL generates knowledge and technical artifacts, then hands them
+to another actor when needed. The goal is not to become the world's producer of
+secure compute. Others will make foreseeable mistakes; the job is to find and
+preempt them.
 {{< /callout >}}
 
 If this sounds exciting to you, [we're hiring](/careers/)!
