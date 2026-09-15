@@ -1,9 +1,47 @@
-{{- define "main" }}
-<div class="isl-hero">
-  <h1>{{ .Site.Params.headline }}</h1>
-  <p class="isl-tagline">{{ .Site.Params.tagline }}</p>
+{{ define "main" }}
+<div class="wrap">
+  <section class="hero">
+    <h1>{{ site.Params.headline }}</h1>
+    <p>{{ site.Params.tagline }}</p>
+  </section>
+
+  {{- with .Content }}
+  {{/* id + .lede are the hooks the dev-only treatment panel drives. */}}
+  <section class="lede" id="lede">
+    <div class="lede-row">
+      <div class="lede-tag"></div>
+      <div class="prose">{{ . }}</div>
+    </div>
+  </section>
+  {{- end }}
+
+  {{/* Hub cards. Each links to a real page — never an anchor. */}}
+  <section style="border-bottom:0">
+    <div class="hub">
+      {{- range site.Params.hub }}
+      <a href="{{ .url | relLangURL }}"{{ with .feature }} class="feature"{{ end }}>
+        <span class="label">{{ .label }}</span>
+        <h3>{{ .title }}</h3>
+        <p>{{ .blurb }}</p>
+      </a>
+      {{- end }}
+    </div>
+  </section>
 </div>
-<div class="post-content md-content">
-  {{ .Content }}
-</div>
-{{- end }}
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Contact</span><h2>Get in touch</h2></div>
+    <div class="rows">
+      <dl>
+        <dt>General</dt>
+        <dd><a href="mailto:{{ site.Params.contactEmail }}">{{ site.Params.contactEmail }}</a></dd>
+      </dl>
+      <dl>
+        <dt>Speculative applications</dt>
+        <dd><a href="mailto:{{ site.Params.talentEmail }}">{{ site.Params.talentEmail }}</a></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+{{ end }}

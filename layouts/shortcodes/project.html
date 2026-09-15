@@ -1,0 +1,10 @@
+{{/*
+  One project card.
+
+  .Inner MUST stay hand-written markdown. display:block, not markdownify —
+  markdownify unwraps a single paragraph, which would drop the <p> styling.
+*/}}
+<div class="card">
+  <h3>{{ .Get "title" }}</h3>
+  {{ .Page.RenderString (dict "display" "block") .Inner }}
+</div>

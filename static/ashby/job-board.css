@@ -1,0 +1,206 @@
+/* Custom CSS for the Ashby job board.
+   Published at /ashby/job-board.css and injected into the embed iframe via the
+   shortcode's customCssUrl setting — the iframe is cross-origin, so this is the
+   only way our styling reaches it. Also paste it into the Ashby console (Job
+   Board settings) so direct visits to jobs.ashbyhq.com match.
+
+   Palette duplicated from assets/css/isl.css; keep the two in sync.
+
+   Dark mode follows prefers-color-scheme. The site's manual toggle cannot reach
+   inside the iframe, so a visitor who overrides their OS preference on our
+   toggle will see the board in the other mode. */
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/IBMPlexSerif-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/Merriweather-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/Merriweather-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/Merriweather-Italic.woff2") format("woff2");
+}
+
+:root {
+  --isl-ground: #FDF2E6;
+  --isl-raised: #FFFCF8;
+  --isl-ink:    #1F1E1B;
+  --isl-muted:  #57544D;
+  --isl-faint:  #67645C;
+  --isl-accent: #474A62;
+  --isl-border: #CFC3A9;
+  --isl-onaccent: #FDF2E6;
+  --isl-overlay: rgba(253, 242, 230, 0.92);
+
+  --colorAppBackground: var(--isl-ground);
+
+  /* !important is required: the Ashby admin theme sets these inline on <html>. */
+  --colorPrimary900: #474A62 !important;
+  --colorPrimary600: #757789 !important;
+
+  --fontFamily: "Merriweather", Georgia, "Times New Roman", serif;
+
+  --borderRadiusContainer: 3px;
+  --borderRadiusControl: 3px;
+  --borderRadiusButton: 3px;
+
+  --widthMaxJobBoard: 720px;
+}
+
+/* Dark. Blue is 1.9:1 on Soft Black and unusable, so the accent becomes
+   Light Green, matching the site. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --isl-ground: #1F1E1B;
+    --isl-raised: #262521;
+    --isl-ink:    #FDF2E6;
+    --isl-muted:  #BFB6A8;
+    --isl-faint:  #A9A093;
+    --isl-accent: #BCC8AD;
+    --isl-border: #3A3832;
+    --isl-onaccent: #1F1E1B;
+    --isl-overlay: rgba(31, 30, 27, 0.92);
+
+    --colorPrimary900: #BCC8AD !important;
+    --colorPrimary600: #8E9A82 !important;
+  }
+}
+
+body {
+  background-color: var(--isl-ground);
+  color: var(--isl-ink);
+}
+
+/* ── Text ── */
+.ashby-job-board-heading {
+  color: var(--isl-accent);
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.ashby-job-board-heading-count { color: var(--isl-faint); }
+
+.ashby-department-heading,
+.ashby-job-posting-brief-department-heading {
+  color: var(--isl-accent);
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.ashby-job-posting-brief-title,
+.ashby-job-posting-heading {
+  color: var(--isl-accent);
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.ashby-job-posting-brief-details { color: var(--isl-muted); }
+
+.ashby-job-board-filters-label,
+.ashby-job-board-reset-filters-label { color: var(--isl-faint); }
+
+/* ── Cards and controls ──
+   Ashby leaves these transparent and relies on its own white page for contrast.
+   On our ground they inherit it and stop reading as raised surfaces, so give
+   them an explicit fill one step off the page. */
+.ashby-job-posting-brief,
+.ashby-job-board-filter,
+.ashby-job-board-filter select {
+  background-color: var(--isl-raised);
+  border: 1px solid var(--isl-border);
+  color: var(--isl-ink);
+}
+
+.ashby-job-posting-brief { margin-bottom: 10px; }
+
+/* Inner panels default to white, one level in from --colorAppBackground. */
+.ashby-job-posting-left-pane,
+.ashby-job-posting-description-container,
+.ashby-application-form-container,
+.ashby-application-form-autofill-pane,
+.ashby-application-form-autofill-input-root {
+  background-color: transparent;
+}
+
+/* Translucent overlays: need a colour, not transparent. */
+.ashby-application-form-autofill-input-drag-layer,
+.ashby-application-form-autofill-input-pending-layer {
+  background-color: var(--isl-overlay);
+}
+
+/* ── Form fields ──
+   Same reasoning as the cards above: Ashby's inputs have no background of their
+   own, so on our ground they were tone-on-tone with only a hairline to mark
+   them as editable. */
+.ashby-application-form-container input,
+.ashby-application-form-container textarea,
+.ashby-application-form-container select {
+  background-color: var(--isl-raised);
+  border-color: var(--isl-border);
+  color: var(--isl-ink);
+}
+
+/* Yes/No toggles, plus the per-field Upload File button. Ashby's unselected
+   label is #a8aebd, which is 2:1 against our ground — unreadable. The selected
+   state is left alone: it carries an _active_ class that paints itself in
+   --colorPrimary900 at a higher specificity than this rule, so it still wins. */
+.ashby-application-form-field-entry button {
+  background-color: var(--isl-raised);
+  border-color: var(--isl-border);
+  color: var(--isl-faint);
+}
+
+input[type="file"] {
+  font-family: inherit;
+  color: var(--isl-ink);
+}
+
+input[type="file"]::file-selector-button {
+  font-family: inherit;
+  background-color: transparent;
+  border: 1px solid var(--isl-border);
+  border-radius: 3px;
+  color: var(--isl-ink);
+}
+
+/* ── Controls ── */
+.ashby-application-form-submit-button {
+  background-color: var(--isl-accent);
+  color: var(--isl-onaccent);
+  border-radius: 3px;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
+}
+
+.ashby-job-board-back-to-all-jobs-button {
+  border-radius: 3px;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
+  color: var(--isl-accent);
+}
+
+.ashby-application-form-question-title,
+.ashby-application-form-section-header-title { color: var(--isl-accent); }
+
+.ashby-application-form-question-description,
+.ashby-application-form-section-header-description,
+.ashby-application-form-texting-consent-description { color: var(--isl-muted); }
+
+/* The "Apply for this Job" button has no ashby-* hook and cannot be restyled
+   here; set the theme's primary colour in the Ashby admin instead. */

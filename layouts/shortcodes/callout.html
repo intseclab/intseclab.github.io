@@ -9,5 +9,6 @@
 */}}
 <aside class="isl-callout">
   <h3>{{ .Get "title" }}</h3>
-  {{ .Inner | markdownify }}
+  {{/* display:block — markdownify would unwrap a single-paragraph callout. */}}
+  {{ .Page.RenderString (dict "display" "block") .Inner }}
 </aside>

@@ -1,0 +1,8 @@
+{{/*
+  Wraps person/project cards in the responsive grid.
+  Usage: {{< grid class="people" >}} ...card shortcodes... {{< /grid >}}
+  class is "people" or "cards".
+*/}}
+<div class="{{ .Get "class" | default "cards" }}">
+  {{ .Inner }}
+</div>

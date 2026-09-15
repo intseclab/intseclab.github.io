@@ -1,0 +1,17 @@
+{{/*
+  One director. Usage:
+    {{< person name="Gabriel Kulp" role="Executive Director" >}}
+    Bio paragraphs as markdown.
+    {{< /person >}}
+
+  .Inner MUST stay hand-written markdown. Do not nest shortcodes inside this
+  one, and do not hand it raw HTML.
+*/}}
+<div class="person">
+  <h3>{{ .Get "name" }}</h3>
+  <p class="role">{{ .Get "role" }}</p>
+  {{/* RenderString with display:block, not markdownify — markdownify unwraps a
+       single paragraph, so one-paragraph bios would emit no <p> and miss the
+       .person p styling that multi-paragraph bios get. */}}
+  {{ .Page.RenderString (dict "display" "block") .Inner }}
+</div>

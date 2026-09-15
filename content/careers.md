@@ -1,5 +1,8 @@
 ---
 title: "Careers"
+heading: "We are growing"
+# The board is 720px wide; the reading measure would squeeze it to ~544px.
+wide: true
 ---
 
 ISL is a nonprofit research lab building secure infrastructure for

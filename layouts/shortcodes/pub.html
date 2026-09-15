@@ -1,0 +1,8 @@
+{{/*
+  A publication entry. Usage:
+    {{< pub title="…" url="…" meta="RAND Corporation · Research report" >}}
+*/}}
+<div class="pub">
+  <h3><a href="{{ .Get "url" }}">{{ .Get "title" }}</a></h3>
+  <p class="meta">{{ .Get "meta" }}</p>
+</div>

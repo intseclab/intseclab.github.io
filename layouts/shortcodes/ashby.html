@@ -1,7 +1,21 @@
-{{- $org := .Site.Params.ashbyOrg -}}
+{{/*
+  Ashby job board embed. The board renders in a cross-origin iframe, so page CSS
+  cannot reach it — customCssUrl is the only styling hook, and it injects our
+  stylesheet inside the frame. Absolute URL required: the iframe resolves it
+  against jobs.ashbyhq.com, not us.
+*/}}
+{{- $org := site.Params.ashbyOrg -}}
 {{- $board := printf "https://jobs.ashbyhq.com/%s" $org -}}
 <div id="ashby_embed"></div>
 <script>
+  window.__Ashby = {
+    settings: {
+      ashbyBaseJobBoardUrl: {{ $board }},
+      customCssUrl: {{ "ashby/job-board.css" | absURL }},
+      autoScroll: false
+    }
+  };
+  {{/* Legacy global, still read by the embed as a fallback. */}}
   window.__ashbyBaseJobBoardUrl = {{ $board }};
 </script>
 <script id="ashby-script" src="{{ printf "%s/embed?version=2" $board }}"></script>
