@@ -29,11 +29,8 @@ and we cannot count on noticing this happening.
 
 ## What is ISL doing?
 
-ISL exists to develop and demonstrate the required level of security for
-critical AI deployments in advance of when it's needed. We expect this to be
-difficult in ways that are hard to anticipate. By confronting these
-challenges early, we uncover problems with enough lead time to solve them and
-build key practical knowledge before it's required.
+<!-- The paragraph that opened this section is now the page standfirst; see
+     `lede` in the front matter. Do not reinstate it here. -->
 
 This requires a new focused research and development
 effort. Even if each component is investigated deeply, the secure data center,

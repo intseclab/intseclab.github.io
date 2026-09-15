@@ -1,55 +1,11 @@
-{{/*
-  Design-decision panel. Renders ONLY under `hugo server` — hugo.IsServer is
-  false for every production build, so none of this can ship.
-
-  Exists so treatments can be judged on the real site, with the real header,
-  footer, nav, fonts and isl.css, instead of a standalone mockup that drifts
-  from the build. Delete this partial and its baseof call once the lede
-  treatment is decided.
-*/}}
+{{/* Dev-only decision panel. hugo.IsServer is false in production, so it
+     cannot ship. Delete this partial and its baseof call when done. */}}
 {{- if hugo.IsServer }}
 <style>
-  /* ── Candidate treatments. Nothing here is in isl.css yet. ── */
-  .lede .lede-row { display: block; }
-  .lede .lede-tag { display: none; }
-
-  .lede[data-label="left"] .lede-row {
-    display: grid;
-    grid-template-columns: var(--dev-labelcol, 9rem) 1fr;
-    gap: var(--mod);
-    align-items: start;
-  }
-  .lede[data-label="left"] .lede-tag,
-  .lede[data-label="above"] .lede-tag { display: block; }
-  .lede[data-label="above"] .lede-tag { margin-bottom: 0.9rem; }
-
-  .lede[data-t="right"] .prose { margin-left: auto; }
-
-  .lede[data-t="statement"] .prose { max-width: min(46rem, 100%); }
-  .lede[data-t="statement"] .prose p {
-    font-family: var(--display);
-    font-size: var(--dev-statement-size, 1.6rem);
-    line-height: 1.32;
-    color: var(--accent);
-  }
-  /* At 1.6rem the first baseline sits below the label's, so top-aligning the
-     boxes reads as misaligned. Optical nudge. */
-  .lede[data-t="statement"][data-label="left"] .lede-tag { padding-top: 0.42rem; }
-
-  .lede[data-t="columns"] .prose { columns: 2; column-gap: var(--mod); max-width: none; }
-  .lede[data-t="columns"] .prose p { margin: 0; }
-
-  .lede[data-align="justify"] .prose { text-align: justify; hyphens: auto; }
-  .lede[data-align="right"] .prose { text-align: right; }
-
-  /* ── Card surface ──
-     In light mode --raised equals --ground, so cards are opaque fills in the
-     page colour: they cannot read as raised, they just delete the grid beneath
-     and punch holes in the paper. Dark mode is fine (#262521 vs #1F1E1B). */
+  /* Card surface: in light mode --raised == --ground, so cards are opaque fills
+     in the page colour and punch holes in the grid. */
   body[data-cards="transparent"] .hub a,
-  body[data-cards="transparent"] .card,
-  body[data-cards="transparent"] .hub a.feature { background: transparent; }
-
+  body[data-cards="transparent"] .card { background: transparent; }
   body[data-cards="lifted"] .hub a,
   body[data-cards="lifted"] .card { background: #FFFCF8; }
   @media (prefers-color-scheme: dark) {
@@ -59,59 +15,8 @@
   :root[data-theme="dark"] body[data-cards="lifted"] .hub a,
   :root[data-theme="dark"] body[data-cards="lifted"] .card { background: #2B2A25; }
 
-  /* ── Where the mission blurb lives ──
-     The home paragraph and About's "What is ISL doing?" opener were 89%
-     identical. These let you preview each home for it, and preview the body
-     duplicate removed, without editing content yet. */
-  body[data-blurb="about"]   #lede,
-  body[data-blurb="neither"] #lede { display: none; }
-  body[data-blurb="home"]    #pagelede,
-  body[data-blurb="neither"] #pagelede { display: none; }
-  /* Marked by JS: the in-body paragraph the standfirst duplicates. */
-  body[data-dupe="hide"] .dev-dupe { display: none; }
-
-  /* Standfirst as a display statement rather than a deck. */
-  body[data-ledestyle="statement"] .page-lede { max-width: min(46rem, 100%); }
-  body[data-ledestyle="statement"] .page-lede p {
-    font-family: var(--display);
-    font-size: var(--dev-statement-size, 1.6rem);
-    line-height: 1.32;
-    color: var(--accent);
-  }
-
-  /* ── Closing block: contact band + footer as one terminal region ──
-     No markup change needed — .contact and .site-footer are already adjacent,
-     so painting both makes the green run to the bottom of the page. */
-  body[data-closing="merged"] .contact { padding-bottom: var(--mod); }
-  body[data-closing="merged"] .site-footer {
-    background: var(--band);
-    border-top: 0;
-  }
-  body[data-closing="merged"] .site-footer p { color: var(--band-accent); }
-
-  /* ── Grid over the closing region ──
-     One absolutely-positioned overlay spanning from the band's top edge to the
-     end of the document, so it covers the contact block AND the footer as a
-     single surface and one mask gradient runs continuously across both.
-
-     Position and phase are set in JS: CSS cannot know the band's offset from
-     the top of the document, and without that offset the rows restart and the
-     grid visibly breaks where the paper meets the green. */
-  body { position: relative; }
-  #dpGrid {
-    position: absolute; left: 0; width: 100%;
-    z-index: 0; pointer-events: none;
-  }
-  /* Lift content above the overlay. .contact is position:relative with z-index
-     auto, so it is not a stacking context and these compete in body's. */
-  .contact { position: relative; }
-  .contact > * { position: relative; z-index: 1; }
-  .site-footer { position: relative; }
-  .site-footer .wrap { position: relative; z-index: 1; }
-
-  /* ── Panel chrome ── */
   #devpanel {
-    position: fixed; right: 1rem; bottom: 1rem; z-index: 100; width: 15.5rem;
+    position: fixed; right: 1rem; bottom: 1rem; z-index: 100; width: 14rem;
     background: var(--ground); border: 1px solid var(--accent);
     padding: .75rem .8rem; font-family: var(--body); font-size: 11px;
     max-height: 92vh; overflow: auto;
@@ -121,7 +26,6 @@
     text-transform: uppercase; color: var(--accent);
     margin: .8rem 0 .35rem; font-weight: 700;
   }
-  #devpanel h4:first-of-type { margin-top: 0; }
   #devpanel .r { display: flex; gap: 4px; flex-wrap: wrap; }
   #devpanel .s { display: flex; flex-direction: column; gap: 3px; }
   #devpanel button {
@@ -134,22 +38,20 @@
   #devpanel .out { color: var(--muted); font-variant-numeric: tabular-nums; }
   #devpanel hr { border: 0; border-top: 1px solid var(--rule); margin: .7rem 0; }
   #devpanel .why { color: var(--muted); line-height: 1.5; margin: .4rem 0 0; font-style: italic; }
-  /* ── Collapse ── */
   #dpHead {
     display: flex; align-items: center; gap: .5rem; width: 100%;
     background: transparent; border: 0; padding: 0; cursor: pointer;
     font-family: var(--body); font-size: 8.5px; letter-spacing: .14em;
     text-transform: uppercase; color: var(--accent);
   }
-  #dpHead .chev { margin-left: auto; font-size: 10px; color: var(--accent); }
+  #dpHead .chev { margin-left: auto; font-size: 10px; }
   #dpBody { margin-top: .6rem; }
   #devpanel[data-collapsed="true"] { width: auto; }
   #devpanel[data-collapsed="true"] #dpBody { display: none; }
-  /* Never hidden — it used to display:none under 900px, which made it vanish
-     whenever the window was narrowed to check responsive behaviour. It shrinks
-     instead, and collapse is the way to get it out of the way. */
+  /* Shrinks rather than hides: display:none here made it vanish whenever the
+     window was narrowed. */
   @media (max-width: 900px) {
-    #devpanel { right: .5rem; bottom: .5rem; width: 12.5rem; font-size: 10.5px; }
+    #devpanel { right: .5rem; bottom: .5rem; width: 12rem; }
     #devpanel button { font-size: 10px; padding: 2px 5px; }
   }
 </style>
@@ -161,254 +63,67 @@
   </button>
 
   <div id="dpBody">
-  <p class="why" id="dpNote" style="display:none;margin-top:0">
-    Landing-page only. Treatment, label and closing-block controls have nothing
-    to act on here; grid module still works.
-  </p>
-  <h4>Card surface</h4>
-  <div class="s" data-set="cards">
-    <button data-v="ground" aria-pressed="true">Ground (holes in grid)</button>
-    <button data-v="transparent" aria-pressed="false">Transparent — grid through</button>
-    <button data-v="lifted" aria-pressed="false">Lifted tint</button>
-  </div>
+    <h4>Card surface</h4>
+    <div class="s" data-set="cards">
+      <button data-v="ground" aria-pressed="true">Ground (holes in grid)</button>
+      <button data-v="transparent" aria-pressed="false">Transparent</button>
+      <button data-v="lifted" aria-pressed="false">Lifted tint</button>
+    </div>
 
-  <hr>
-  <h4>Mission blurb lives on</h4>
-  <div class="s" data-set="blurb">
-    <button data-v="home" aria-pressed="true">Home only (ships today)</button>
-    <button data-v="about" aria-pressed="false">About only</button>
-    <button data-v="both" aria-pressed="false">Both (the repetition)</button>
-    <button data-v="neither" aria-pressed="false">Neither</button>
-  </div>
+    <hr>
+    <h4>Band line — <span class="out" id="dpB">10%</span></h4>
+    <div class="r" data-set="bandline">
+      <button data-v="0.06" aria-pressed="false">6%</button>
+      <button data-v="0.10" aria-pressed="true">10%</button>
+      <button data-v="0.16" aria-pressed="false">16%</button>
+    </div>
 
-  <h4>About standfirst style</h4>
-  <div class="r" data-set="ledestyle">
-    <button data-v="deck" aria-pressed="true">Deck</button>
-    <button data-v="statement" aria-pressed="false">Statement</button>
-  </div>
+    <h4>Grid module</h4>
+    <div class="r" data-set="mod">
+      <button data-v="24px" aria-pressed="false">24</button>
+      <button data-v="32px" aria-pressed="true">32</button>
+      <button data-v="40px" aria-pressed="false">40</button>
+    </div>
 
-  <h4>Body duplicate on About</h4>
-  <div class="r" data-set="dupe">
-    <button data-v="show" aria-pressed="true">Keep</button>
-    <button data-v="hide" aria-pressed="false">Remove</button>
-  </div>
-
-  <hr>
-  <h4>Home lede treatment</h4>
-  <div class="s" data-set="t">
-    <button data-v="baseline"  aria-pressed="false">A · Baseline (ships today)</button>
-    <button data-v="right"     aria-pressed="false">C · Right-aligned</button>
-    <button data-v="statement" aria-pressed="true">D · Statement</button>
-    <button data-v="columns"   aria-pressed="false">E · Two columns</button>
-  </div>
-
-  <h4>Label</h4>
-  <div class="r" data-set="label">
-    <button data-v="off" aria-pressed="false">Off</button>
-    <button data-v="left" aria-pressed="true">Left</button>
-    <button data-v="above" aria-pressed="false">Above</button>
-  </div>
-
-  <h4>Label text</h4>
-  <div class="r" data-set="labeltext">
-    <button data-v="Mission" aria-pressed="true">Mission</button>
-    <button data-v="Purpose" aria-pressed="false">Purpose</button>
-    <button data-v="Why ISL" aria-pressed="false">Why ISL</button>
-  </div>
-
-  <h4>Label column — <span class="out" id="dpL">9rem</span></h4>
-  <div class="r" data-set="labelcol">
-    <button data-v="7rem" aria-pressed="false">7</button>
-    <button data-v="9rem" aria-pressed="true">9</button>
-    <button data-v="12rem" aria-pressed="false">12</button>
-  </div>
-
-  <h4>Statement size — <span class="out" id="dpS">1.6rem</span></h4>
-  <div class="r" data-set="ssize">
-    <button data-v="1.35rem" aria-pressed="false">1.35</button>
-    <button data-v="1.6rem" aria-pressed="true">1.6</button>
-    <button data-v="1.85rem" aria-pressed="false">1.85</button>
-  </div>
-
-  <h4>Text alignment</h4>
-  <div class="r" data-set="align">
-    <button data-v="left" aria-pressed="true">Left</button>
-    <button data-v="justify" aria-pressed="false">Justify</button>
-    <button data-v="right" aria-pressed="false">Right</button>
-  </div>
-
-  <hr>
-  <h4>Closing block</h4>
-  <div class="s" data-set="closing">
-    <button data-v="banner" aria-pressed="true">Banner (ships today)</button>
-    <button data-v="merged" aria-pressed="false">Merged — green to page end</button>
-  </div>
-
-  <h4>Grid in band</h4>
-  <div class="r" data-set="bandgrid">
-    <button data-v="off" aria-pressed="true">Off</button>
-    <button data-v="cols" aria-pressed="false">Columns</button>
-    <button data-v="full" aria-pressed="false">Full</button>
-  </div>
-
-  <h4>Grid fade</h4>
-  <div class="r" data-set="bandfade">
-    <button data-v="none" aria-pressed="true">None</button>
-    <button data-v="down" aria-pressed="false">Fade down</button>
-    <button data-v="up" aria-pressed="false">Fade up</button>
-  </div>
-
-  <h4>Line strength — <span class="out" id="dpB">10%</span></h4>
-  <div class="r" data-set="bandline">
-    <button data-v="0.06" aria-pressed="false">6%</button>
-    <button data-v="0.10" aria-pressed="true">10%</button>
-    <button data-v="0.16" aria-pressed="false">16%</button>
-  </div>
-
-  <hr>
-  <h4>Grid module</h4>
-  <div class="r" data-set="mod">
-    <button data-v="24px" aria-pressed="false">24</button>
-    <button data-v="32px" aria-pressed="true">32</button>
-    <button data-v="40px" aria-pressed="false">40</button>
-  </div>
-
-  <hr>
-  <div class="r"><button id="dpCopy">Copy settings</button></div>
-  <p class="why" id="dpOut"></p>
+    <hr>
+    <div class="r"><button id="dpCopy">Copy settings</button></div>
+    <p class="why" id="dpOut"></p>
   </div>
 </div>
 
 <script>
 (function () {
-  /* No early return on a missing #lede: it exists only on the home page, and
-     bailing here left the panel a dead box on every other page — collapse
-     included. Lede-specific writes are guarded individually instead. */
-  var lede = document.getElementById('lede');
-  var tag  = lede ? lede.querySelector('.lede-tag') : null;
   var root = document.documentElement;
+  var st = { cards: 'ground', bandline: '0.10', mod: '32px' };
 
-  var st = {
-    t: 'statement', label: 'left', labeltext: 'Mission', labelcol: '9rem',
-    ssize: '1.6rem', align: 'left', mod: '32px',
-    closing: 'banner', bandgrid: 'off', bandfade: 'none', bandline: '0.10',
-    blurb: 'home', ledestyle: 'deck', dupe: 'show', cards: 'ground'
-  };
-
-  /* Persisted, so a setting chosen on Home survives navigating to About —
-     the whole point when the question spans two pages. */
   try {
     var saved = JSON.parse(localStorage.getItem('isl-devpanel-state') || '{}');
     Object.keys(saved).forEach(function (k) { if (k in st) st[k] = saved[k]; });
   } catch (e) {}
 
-  /* Tag the About paragraph the standfirst duplicates, so it can be previewed
-     removed. Matched on its opening words rather than position. */
-  (function () {
-    /* Only where a standfirst exists — on Home the same opening words are the
-       blurb itself, which the blurb knob already controls. */
-    if (!document.getElementById('pagelede')) return;
-    var ps = document.querySelectorAll('.prose > p');
-    for (var i = 0; i < ps.length; i++) {
-      if (ps[i].textContent.indexOf('ISL exists to develop and demonstrate') === 0) {
-        ps[i].classList.add('dev-dupe');
-      }
-    }
-  })();
-
   function apply() {
-    /* Reflect state on the buttons — required once state is restored from
-       localStorage, since the markup ships with the defaults pressed. */
     document.querySelectorAll('#devpanel [data-set]').forEach(function (g) {
       var k = g.dataset.set;
       g.querySelectorAll('button').forEach(function (o) {
         o.setAttribute('aria-pressed', String(o.dataset.v === st[k]));
       });
     });
-    if (lede) {
-      lede.setAttribute('data-t', st.t);
-      lede.setAttribute('data-label', st.label);
-      lede.setAttribute('data-align', st.align);
-    }
-    if (tag) {
-      tag.innerHTML = '<span class="label"></span>';
-      tag.firstChild.textContent = st.labeltext;
-    }
-    root.style.setProperty('--dev-labelcol', st.labelcol);
-    root.style.setProperty('--dev-statement-size', st.ssize);
+    document.body.setAttribute('data-cards', st.cards);
+    root.style.setProperty('--band-line', 'rgba(253,242,230,' + st.bandline + ')');
     root.style.setProperty('--mod', st.mod);
-    var b = document.body;
-    b.setAttribute('data-closing', st.closing);
-    b.setAttribute('data-bandgrid', st.bandgrid);
-    b.setAttribute('data-bandfade', st.bandfade);
-    b.setAttribute('data-blurb', st.blurb);
-    b.setAttribute('data-ledestyle', st.ledestyle);
-    b.setAttribute('data-dupe', st.dupe);
-    b.setAttribute('data-cards', st.cards);
-    try { localStorage.setItem('isl-devpanel-state', JSON.stringify(st)); } catch (e) {}
-    document.getElementById('dpL').textContent = st.labelcol;
-    document.getElementById('dpS').textContent = st.ssize;
     document.getElementById('dpB').textContent = Math.round(st.bandline * 100) + '%';
-    /* Layout must settle before the overlay can be measured. */
-    requestAnimationFrame(drawGrid);
+    try { localStorage.setItem('isl-devpanel-state', JSON.stringify(st)); } catch (e) {}
   }
 
-  /* Builds the closing-region grid overlay. The phase shift is the whole point:
-     backgroundPosition y = -(offset mod module) puts this grid's rows on the
-     same lattice as the page grid above, so the lines continue across the
-     paper-to-green boundary instead of restarting. */
-  function drawGrid() {
-    var el = document.getElementById('dpGrid');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'dpGrid';
-      document.body.appendChild(el);
-    }
-    var contact = document.querySelector('.contact');
-    if (!contact || st.bandgrid === 'off') { el.style.display = 'none'; return; }
-    el.style.display = 'block';
+  document.querySelectorAll('#devpanel [data-set]').forEach(function (g) {
+    var key = g.dataset.set;
+    g.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () { st[key] = b.dataset.v; apply(); });
+    });
+  });
 
-    var top = contact.getBoundingClientRect().top + window.scrollY;
-    var mod = parseFloat(st.mod) || 32;
-
-    /* End at the footer's bottom edge, not documentElement.scrollHeight —
-       scrollHeight is at least the viewport height, so on a short page it
-       reaches past the footer and the grid bleeds onto the beige below. */
-    var foot = document.querySelector('.site-footer');
-    var bottom = foot
-      ? foot.getBoundingClientRect().bottom + window.scrollY
-      : contact.getBoundingClientRect().bottom + window.scrollY;
-
-    el.style.top    = top + 'px';
-    el.style.height = (bottom - top) + 'px';
-
-    /* Translucent Off White, so one value works on either band colour. */
-    var line = 'rgba(253,242,230,' + st.bandline + ')';
-    var cols = 'repeating-linear-gradient(to right,' + line + ' 0,' + line +
-               ' 1px,transparent 1px,transparent ' + mod + 'px)';
-    var rows = 'repeating-linear-gradient(to bottom,' + line + ' 0,' + line +
-               ' 1px,transparent 1px,transparent ' + mod + 'px)';
-
-    var imgs = st.bandgrid === 'full' ? [cols, rows] : [cols];
-    var phase = -(top % mod);
-    el.style.backgroundImage    = imgs.join(',');
-    el.style.backgroundPosition = imgs.map(function () { return '0px ' + phase + 'px'; }).join(',');
-
-    var m = st.bandfade === 'down' ? 'linear-gradient(to bottom,#000 0%,#000 6%,transparent 82%)'
-          : st.bandfade === 'up'   ? 'linear-gradient(to top,#000 0%,#000 6%,transparent 82%)'
-          : 'none';
-    el.style.webkitMaskImage = m;
-    el.style.maskImage = m;
-  }
-
-  if (!lede) {
-    var n = document.getElementById('dpNote');
-    if (n) n.style.display = 'block';
-  }
-
-  /* Collapse, remembered across reloads so it stays out of the way. */
   var panel = document.getElementById('devpanel');
-  var head  = document.getElementById('dpHead');
+  var head = document.getElementById('dpHead');
   function setCollapsed(v) {
     panel.setAttribute('data-collapsed', String(v));
     head.setAttribute('aria-expanded', String(!v));
@@ -421,25 +136,6 @@
   try {
     if (localStorage.getItem('isl-devpanel-collapsed') === '1') setCollapsed(true);
   } catch (e) {}
-
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt); rt = setTimeout(drawGrid, 120);
-  });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawGrid);
-
-  document.querySelectorAll('#devpanel [data-set]').forEach(function (g) {
-    var key = g.dataset.set;
-    g.querySelectorAll('button').forEach(function (b) {
-      b.addEventListener('click', function () {
-        g.querySelectorAll('button').forEach(function (o) {
-          o.setAttribute('aria-pressed', String(o === b));
-        });
-        st[key] = b.dataset.v;
-        apply();
-      });
-    });
-  });
 
   document.getElementById('dpCopy').addEventListener('click', function () {
     var txt = JSON.stringify(st);

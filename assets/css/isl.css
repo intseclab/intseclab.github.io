@@ -13,11 +13,16 @@
   --band-ink:    #FDF2E6;
   --band-accent: #BCC8AD;  /* Light Green */
   --band-rule:   transparent;
+  --band-line:   rgba(253, 242, 230, 0.10);  /* grid on the band */
 
   /* Grid module. Header height is pinned to 5 modules; see header below. */
   --mod: 32px;
   --measure: 34rem;
-  --shell: 61rem;
+  /* Inner width 928px = 29 modules, so 2-/3-col tracks land on 448/288. */
+  --shell: 62rem;
+  /* Grid phase, locked to the content column's left edge, not the viewport.
+     448 not 464: % positions resolve against (area − tile). */
+  --grid-x: max(var(--mod), calc(50% - 448px));
 
   --display: "Algebra", Georgia, serif;
   --body:    "Merriweather", Georgia, serif;
@@ -70,15 +75,24 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--body);
   font-size: 15px;
   line-height: 1.65;
   color: var(--ink);
   background-color: var(--ground);
+  /* Not repeating-linear-gradient: it sizes to the element, which makes
+     background-position inert. */
   background-image:
-    repeating-linear-gradient(to right,  var(--grid) 0, var(--grid) 1px, transparent 1px, transparent var(--mod)),
-    repeating-linear-gradient(to bottom, var(--grid) 0, var(--grid) 1px, transparent 1px, transparent var(--mod));
+    linear-gradient(to right,  var(--grid) 0, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 0, var(--grid) 1px, transparent 1px);
+  background-size: var(--mod) var(--mod);
+  background-position: var(--grid-x) 0;
 }
+
+main { flex: 1 0 auto; }
 
 .wrap { max-width: var(--shell); margin: 0 auto; padding: 0 var(--mod); }
 
@@ -177,9 +191,15 @@ section:last-of-type { border-bottom: 0; }
 .page-head { padding: calc(var(--mod) * 2) 0 0; }
 .page-head h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-top: 0.75rem; }
 
-/* Standfirst under the H1. Deck treatment, matching the hero's. */
-.page-lede { max-width: var(--measure); margin-top: 1.25rem; }
-.page-lede p { margin: 0; font-size: 1.05rem; color: var(--muted); }
+/* Standfirst under the H1, as a display statement. */
+.page-lede { max-width: min(46rem, 100%); margin-top: 1.25rem; }
+.page-lede p {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  line-height: 1.32;
+  color: var(--accent);
+}
 
 .prose { max-width: var(--measure); }
 /* Card pages need the full shell — the reading measure would squeeze the grid
@@ -260,10 +280,34 @@ section:last-of-type { border-bottom: 0; }
 .pub h3 { font-size: 1rem; }
 .pub .meta { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; margin: 0.2rem 0 0; }
 
-/* ── Contact band ─────────────────────────────────────────────────── */
+/* ── Closing block ────────────────────────────────────────────────────
+   Contact band + footer as one region. Pinned to the viewport bottom by the
+   flex column on body, so short pages don't end the green mid-screen. */
+.closing {
+  position: relative;
+  background: var(--band);
+  color: var(--band-ink);
+  border-top: 1px solid var(--band-rule);
+}
+.closing > * { position: relative; z-index: 1; }
+
+/* Grid fading upward: strongest at the page's bottom edge, gone by the top.
+   position y=100% anchors rows to the bottom, so the bottom row is always
+   whole and the partial one lands under the fade. */
+.closing::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(to right,  var(--band-line) 0, var(--band-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--band-line) 0, var(--band-line) 1px, transparent 1px);
+  background-size: var(--mod) var(--mod);
+  background-position: var(--grid-x) 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 8%, transparent 84%);
+          mask-image: linear-gradient(to top, #000 0%, #000 8%, transparent 84%);
+}
+
 .contact {
-  background: var(--band); color: var(--band-ink);
-  border-top: 1px solid var(--band-rule); border-bottom: 0;
+  border-bottom: 0;
   padding: calc(var(--mod) * 2) 0;
 }
 .contact h2 { color: var(--band-ink); }
@@ -279,10 +323,9 @@ section:last-of-type { border-bottom: 0; }
 }
 .contact dd { margin: 0; font-size: 1rem; }
 
-/* ── Footer ───────────────────────────────────────────────────────── */
-.site-footer { border-top: 1px solid var(--rule); }
+/* ── Footer ── sits inside .closing, so it inherits the band ── */
 .site-footer .wrap { padding-top: var(--mod); padding-bottom: var(--mod); }
-.site-footer p { margin: 0; font-size: 12px; color: var(--muted); text-align: center; }
+.site-footer p { margin: 0; font-size: 12px; color: var(--band-accent); text-align: center; }
 
 /* ── Ashby embed ──────────────────────────────────────────────────── */
 .isl-careers-fallback { margin-top: 1.5rem; font-size: 14px; }

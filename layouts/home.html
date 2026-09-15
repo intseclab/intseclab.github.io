@@ -5,16 +5,6 @@
     <p>{{ site.Params.tagline }}</p>
   </section>
 
-  {{- with .Content }}
-  {{/* id + .lede are the hooks the dev-only treatment panel drives. */}}
-  <section class="lede" id="lede">
-    <div class="lede-row">
-      <div class="lede-tag"></div>
-      <div class="prose">{{ . }}</div>
-    </div>
-  </section>
-  {{- end }}
-
   {{/* Hub cards. Each links to a real page — never an anchor. */}}
   <section style="border-bottom:0">
     <div class="hub">
@@ -28,20 +18,4 @@
     </div>
   </section>
 </div>
-
-<section class="contact" id="contact">
-  <div class="wrap">
-    <div class="sec-head"><span class="label">Contact</span><h2>Get in touch</h2></div>
-    <div class="rows">
-      <dl>
-        <dt>General</dt>
-        <dd><a href="mailto:{{ site.Params.contactEmail }}">{{ site.Params.contactEmail }}</a></dd>
-      </dl>
-      <dl>
-        <dt>Speculative applications</dt>
-        <dd><a href="mailto:{{ site.Params.talentEmail }}">{{ site.Params.talentEmail }}</a></dd>
-      </dl>
-    </div>
-  </div>
-</section>
 {{ end }}
