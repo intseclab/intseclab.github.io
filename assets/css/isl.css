@@ -8,7 +8,7 @@
   --muted:       #57544D;
   --accent:      #474A62;  /* Blue       */
   --rule:        #D9CBB8;
-  --grid:        #EFE2D2;
+  --grid:        #F3E7D8;  /* 70% of the kit "Mid" value */
   --band:        #2F3930;  /* Deep Green */
   --band-ink:    #FDF2E6;
   --band-accent: #BCC8AD;  /* Light Green */
@@ -32,7 +32,7 @@
    Light Green. The band stays green and lifts, staying recessive like the
    light-mode band rather than inverting: a Light Green band was tried and
    rejected — at 55% luminance against a 1.3% ground it glares, and it spends
-   the accent colour on a background.
+   the accent color on a background.
 
    The brand defines no ramp, so these two are derived, not picked. Both sit
    exactly on the Deep Green -> Light Green line:
@@ -48,7 +48,7 @@
     --muted:       #BFB6A8;
     --accent:      #BCC8AD;
     --rule:        #3A3832;
-    --grid:        #272621;
+    --grid:        #25241F;
     --band:        #444E43;
     --band-ink:    #FDF2E6;
     --band-accent: #BCC8AD;
@@ -62,7 +62,7 @@
   --muted:       #BFB6A8;
   --accent:      #BCC8AD;
   --rule:        #3A3832;
-  --grid:        #272621;
+  --grid:        #25241F;
   --band:        #444E43;
   --band-ink:    #FDF2E6;
   --band-accent: #BCC8AD;
@@ -78,6 +78,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* dvh below: iOS 100vh excludes the collapsing URL bar, so the closing block
+     sat under the fold and shifted while scrolling. */
   font-family: var(--body);
   font-size: 15px;
   line-height: 1.65;
@@ -92,13 +94,17 @@ body {
   background-position: var(--grid-x) 0;
 }
 
+@supports (min-height: 100dvh) {
+  body { min-height: 100dvh; }
+}
+
 main { flex: 1 0 auto; }
 
 .wrap { max-width: var(--shell); margin: 0 auto; padding: 0 var(--mod); }
 
 h1, h2, h3 {
   font-family: var(--display);
-  font-weight: 400;  /* Algebra ships one cut; never synthesise a bold. */
+  font-weight: 400;  /* Algebra ships one cut; never synthesize a bold. */
   color: var(--accent);
   text-wrap: balance;
   margin: 0;
@@ -207,14 +213,15 @@ section:last-of-type { border-bottom: 0; }
 .page-head { padding: calc(var(--mod) * 2) 0 0; }
 .page-head h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-top: 0.75rem; }
 
-/* Standfirst under the H1, as a display statement. */
+/* Standfirst under the H1, as a display statement. Ink, not accent: the H1 is
+   already accent Algebra, so matching it read as a second heading. */
 .page-lede { max-width: min(46rem, 100%); margin-top: 1.25rem; }
 .page-lede p {
   margin: 0;
   font-family: var(--display);
   font-size: clamp(1.25rem, 2.6vw, 1.6rem);
   line-height: 1.32;
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .prose { max-width: var(--measure); }
@@ -353,7 +360,20 @@ section:last-of-type { border-bottom: 0; }
 .isl-careers-fallback { margin-top: 1.5rem; font-size: 14px; }
 
 @media (max-width: 680px) {
-  .bar { padding: 25px 1rem 35px; gap: 0.75rem; }
-  .site-nav { margin-left: 0; width: 100%; gap: 1rem; }
+  /* var(--mod), not 1rem: at 16px the logo sat left of the content edge and off
+     the grid, which both start at 32px. */
+  .bar { padding: 25px var(--mod) 25px; gap: 0.75rem 1rem; }
+  /* 230px ≈ 55px tall. The 100px spec is a desktop instruction; at full size the
+     lockup is 91% of a 375px viewport. */
+  .bar .logo { flex: 0 1 230px; }
+  /* basis 100% puts nav on its own row; the toggle rides the logo row. */
+  .site-nav { margin-left: 0; flex: 1 1 100%; gap: 1rem; order: 1; }
+  .theme-btn { order: 0; margin-left: auto; min-height: 44px; }
+}
+
+/* Touch targets keyed to input type, not width — tablets sit above the 680px
+   breakpoint but are still finger-driven. */
+@media (pointer: coarse) {
+  .theme-btn { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

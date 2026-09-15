@@ -140,7 +140,7 @@ body {
   background-color: transparent;
 }
 
-/* Translucent overlays: need a colour, not transparent. */
+/* Translucent overlays: need a color, not transparent. */
 .ashby-application-form-autofill-input-drag-layer,
 .ashby-application-form-autofill-input-pending-layer {
   background-color: var(--isl-overlay);
@@ -203,4 +203,4 @@ input[type="file"]::file-selector-button {
 .ashby-application-form-texting-consent-description { color: var(--isl-muted); }
 
 /* The "Apply for this Job" button has no ashby-* hook and cannot be restyled
-   here; set the theme's primary colour in the Ashby admin instead. */
+   here; set the theme's primary color in the Ashby admin instead. */

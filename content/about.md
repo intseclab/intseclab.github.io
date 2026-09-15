@@ -13,7 +13,7 @@ lede: >-
   practical knowledge before it's required.
 ---
 
-## Strategic Context
+## Strategic context
 
 On current trends, we expect a transformatively capable AI model in a handful
 of years. The developer of that model should secure their infrastructure: an

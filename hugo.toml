@@ -36,29 +36,29 @@ disableKinds = ["taxonomy", "term"]
   [[params.hub]]
     label = "About"
     title = "What we're doing, and why"
-    blurb = "The strategic context, the gap we're filling, and the methods we're betting on."
+    blurb = "The problem, and why ISL exists."
     url   = "/about/"
     # Lead card: spans the hub row.
     feature = true
   [[params.hub]]
     label = "Our Work"
     title = "Current projects"
-    blurb = "High-level descriptions of what we're building and the methodology behind it."
+    blurb = "What we're building, and how."
     url   = "/work/"
   [[params.hub]]
     label = "Writing"
-    title = "Publications & notes"
-    blurb = "Research output, plus posts on why the work matters."
+    title = "Publications & blog"
+    blurb = "Research papers and blog posts."
     url   = "/writing/"
   [[params.hub]]
     label = "People"
     title = "Directors"
-    blurb = "Who runs ISL, and where they came from."
+    blurb = "Who runs ISL."
     url   = "/team/"
   [[params.hub]]
     label = "Careers"
     title = "We are growing"
-    blurb = "Open roles, and an open door for adjacent high-reliability fields."
+    blurb = "Open roles and applications."
     url   = "/careers/"
 
 [menu]

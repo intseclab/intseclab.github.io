@@ -1,6 +1,6 @@
 ---
 title: "Writing"
-heading: "Publications & notes"
+heading: "Publications & blog"
 # Card grid needs the full shell, not the reading measure.
 wide: true
 ---
