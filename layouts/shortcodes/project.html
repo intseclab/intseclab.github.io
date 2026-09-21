@@ -5,6 +5,6 @@
   markdownify unwraps a single paragraph, which would drop the <p> styling.
 */}}
 <div class="card">
-  <h3>{{ .Get "title" }}</h3>
+  <h2>{{ .Get "title" }}</h2>
   {{ .Page.RenderString (dict "display" "block") .Inner }}
 </div>

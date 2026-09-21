@@ -5,7 +5,11 @@
 {{- with or .Description .Summary site.Params.tagline }}
 <meta name="description" content="{{ . | plainify | truncate 160 }}">
 {{- end }}
+{{- if eq .Kind "404" }}
+<meta name="robots" content="noindex">
+{{- else }}
 <link rel="canonical" href="{{ .Permalink }}">
+{{- end }}
 
 {{/* Theme stamp before first paint, so a dark visitor never sees a light flash. */}}
 <script>

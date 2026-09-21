@@ -1,8 +1,9 @@
-<footer class="site-footer">
+{{/* div, not footer: .closing is the contentinfo landmark. */}}
+<div class="site-footer">
   <div class="wrap">
     <p>{{ site.Params.footerLine1 }} &middot; {{ site.Params.footerLine2 }}</p>
   </div>
-</footer>
+</div>
 
 <script>
   (function () {
@@ -14,7 +15,13 @@
       try { return matchMedia("(prefers-color-scheme: dark)").matches; }
       catch (e) { return false; }
     }
-    function sync() { btn.textContent = isDark() ? "Light" : "Dark"; }
+    /* No visible label, so the accessible name carries the action and must
+       track state. */
+    function sync() {
+      var label = isDark() ? "Switch to light theme" : "Switch to dark theme";
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+    }
     btn.addEventListener("click", function () {
       var next = isDark() ? "light" : "dark";
       root.setAttribute("data-theme", next);

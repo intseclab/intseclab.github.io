@@ -8,7 +8,7 @@
   one, and do not hand it raw HTML.
 */}}
 <div class="person">
-  <h3>{{ .Get "name" }}</h3>
+  <h2>{{ .Get "name" }}</h2>
   <p class="role">{{ .Get "role" }}</p>
   {{/* RenderString with display:block, not markdownify — markdownify unwraps a
        single paragraph, so one-paragraph bios would emit no <p> and miss the

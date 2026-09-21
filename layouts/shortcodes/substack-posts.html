@@ -1,0 +1,75 @@
+{{/*
+  Substack posts, fetched in the visitor's browser so they are always current
+  with no rebuild and no CI schedule.
+
+  Rendered into our own DOM rather than an iframe, so posts take the site's
+  fonts, palette, dark mode and lattice.
+
+  Substack's /feed sends no access-control-allow-origin, so a browser cannot read
+  it directly. params.substackProxy must point at our Cloudflare Worker, which
+  relays the feed with that header added. See design/cloudflare-session.md.
+  The proxy is expected to return the raw RSS XML.
+
+  Progressive enhancement: the Substack link below ships in the HTML, so no JS,
+  a dead Worker or a failed fetch degrades to a working link rather than an empty
+  section. Posts are not in the HTML and so are not indexed — they are canonical
+  on Substack anyway.
+
+  Params: count (default 6), heading (default "Blog").
+*/}}
+{{- with site.Params.substackURL }}
+  {{- $base := strings.TrimSuffix "/" . }}
+  {{- with $.Get "heading" | default "Blog" }}<h2>{{ . }}</h2>{{ end }}
+  <div id="isl-posts"
+       {{ with site.Params.substackProxy }}data-proxy="{{ . }}"{{ end }}
+       data-count="{{ $.Get "count" | default 6 }}">
+    <p class="isl-substack-more"><a href="{{ $base }}">Read on Substack &rarr;</a></p>
+  </div>
+  <script>
+  (function () {
+    var el = document.getElementById('isl-posts');
+    if (!el || !el.dataset.proxy || !window.fetch || !window.DOMParser) return;
+
+    fetch(el.dataset.proxy)
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
+      .then(function (xml) {
+        var doc = new DOMParser().parseFromString(xml, 'application/xml');
+        if (doc.querySelector('parsererror')) throw new Error('bad feed');
+
+        var items = [].slice.call(
+          doc.querySelectorAll('item'), 0, parseInt(el.dataset.count, 10) || 6);
+        if (!items.length) return;
+
+        var text = function (item, tag) {
+          var node = item.querySelector(tag);
+          return node ? node.textContent.trim() : '';
+        };
+
+        var frag = document.createDocumentFragment();
+        items.forEach(function (item) {
+          var pub = document.createElement('div');
+          pub.className = 'pub';
+
+          var h3 = document.createElement('h3');
+          var a = document.createElement('a');
+          a.href = text(item, 'link');
+          /* textContent, not innerHTML: feed content is untrusted. */
+          a.textContent = text(item, 'title') || 'Untitled';
+          h3.appendChild(a);
+          pub.appendChild(h3);
+
+          var meta = document.createElement('p');
+          meta.className = 'meta';
+          var when = new Date(text(item, 'pubDate'));
+          meta.textContent = isNaN(when) ? '' : when.toLocaleDateString('en-US',
+            { day: 'numeric', month: 'long', year: 'numeric' });
+          pub.appendChild(meta);
+
+          frag.appendChild(pub);
+        });
+        el.insertBefore(frag, el.firstChild);
+      })
+      .catch(function () { /* fallback link is already in the DOM */ });
+  })();
+  </script>
+{{- end }}

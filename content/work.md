@@ -1,5 +1,7 @@
 ---
 title: "Our Work"
+description: >-
+  ISL's current project: a secure inference data center, designed with STPA-Sec, formal methods and other high-assurance approaches.
 heading: "Current projects"
 # Card grid needs the full shell, not the reading measure.
 wide: true

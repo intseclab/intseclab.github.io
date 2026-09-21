@@ -1,5 +1,7 @@
 ---
 title: "People"
+description: >-
+  The directors of Intelligence Security Laboratories and the work they did before joining.
 heading: "Directors"
 label: "People"
 # Card grid needs the full shell, not the reading measure.

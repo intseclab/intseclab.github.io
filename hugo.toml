@@ -28,9 +28,13 @@ disableKinds = ["taxonomy", "term"]
   # Matches --ground in isl.css. Used for theme-color and the pinned-tab mask.
   themeColor   = "#FDF2E6"
 
-  # The Blog link appears in the nav only when this is non-empty.
-  # Leave "" until the Substack publication is live, then paste the URL here.
+  # The Blog link, post list and subscribe box all appear when this is non-empty.
+  # Paste the publication URL here once it exists, e.g. https://isl.substack.com
   substackURL  = ""
+  # Cloudflare Worker that relays the Substack feed with a CORS header, so the
+  # browser can read it. Posts stay hidden until this is set — deliberately, so
+  # we never ship a third-party proxy by accident. See design/cloudflare-session.md
+  substackProxy = ""
 
   # Landing-page hub cards. Order here is the order on the page.
   [[params.hub]]

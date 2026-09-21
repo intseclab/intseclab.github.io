@@ -6,10 +6,9 @@
   {{ partial "header.html" . }}
   <main id="main">{{ block "main" . }}{{ end }}</main>
   {{/* Contact band + footer as one block: shared background, grid and fade. */}}
-  <div class="closing">
+  <footer class="closing">
     {{ if .IsHome }}{{ partial "contact.html" . }}{{ end }}
     {{ partial "footer.html" . }}
-  </div>
-  {{ partial "devpanel.html" . }}
+  </footer>
 </body>
 </html>

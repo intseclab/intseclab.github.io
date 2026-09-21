@@ -11,7 +11,7 @@
       {{- range site.Params.hub }}
       <a href="{{ .url | relLangURL }}"{{ with .feature }} class="feature"{{ end }}>
         <span class="label">{{ .label }}</span>
-        <h3>{{ .title }}</h3>
+        <h2>{{ .title }}</h2>
         <p>{{ .blurb }}</p>
       </a>
       {{- end }}

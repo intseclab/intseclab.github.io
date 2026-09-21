@@ -1,4 +1,21 @@
-/* ISL — grid-paper design system. Replaces PaperMod entirely. */
+/* ISL — grid-paper design system. Replaces PaperMod entirely.
+
+   VERTICAL RHYTHM. Content sits on the 32px lattice, and it stays there only
+   because every vertical value is a whole module. Three rules:
+
+     1. Line boxes are n × --mod, set in px — never a ratio. Wrapping then
+        cannot break alignment: two lines is still 64px.
+     2. Vertical margins and padding are multiples of --mod. No rem, no em.
+     3. Borders come out of the adjacent padding. A 1px border on 64px padding
+        gives 65: use 63px + 1px.
+
+   One non-multiple offsets everything below it permanently. Watch for the
+   non-obvious ones: an inline-block inherits the line-height inside its own box
+   (see .label), and sitting on a baseline adds the strut's descender beneath it
+   (see .page-head).
+
+   scripts/check-lattice.mjs measures every block against the lattice. Run it
+   after touching any vertical value. */
 
 :root {
   /* Brand palette, guidelines p.9. Only approved combinations. */
@@ -17,7 +34,7 @@
 
   /* Grid module. Header height is pinned to 5 modules; see header below. */
   --mod: 32px;
-  --measure: 34rem;
+  --measure: 30rem;
   /* Inner width 928px = 29 modules, so 2-/3-col tracks land on 448/288. */
   --shell: 62rem;
   /* Grid phase, locked to the content column's left edge, not the viewport.
@@ -81,8 +98,8 @@ body {
   /* dvh below: iOS 100vh excludes the collapsing URL bar, so the closing block
      sat under the fold and shifted while scrolling. */
   font-family: var(--body);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 20px;
+  line-height: var(--mod);
   color: var(--ink);
   background-color: var(--ground);
   /* Not repeating-linear-gradient: it sizes to the element, which makes
@@ -131,20 +148,23 @@ a:focus-visible, button:focus-visible {
   letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--accent); border: 1px solid var(--accent);
   padding: 3px 9px; background: transparent;
+  line-height: 24px;  /* box = 32 with padding + border */
 }
 
 /* ── Header ───────────────────────────────────────────────────────────
-   25px top + 100px logo + 35px bottom = 160px = 5 modules, so the grid
-   resumes flush below the bottom rule. The 25 and the 100 are fixed
-   requirements; the 35 is the remainder that lands it on the grid. */
+   25 top + 100 logo + 34 bottom + 1px border = 160 = 5 modules. The 25 and the
+   100 are fixed requirements; the 34 is the remainder. Mobile is 192 = 6. */
 .site-header {
+  position: relative;  /* mobile toggle is positioned out of flow */
   border-bottom: 1px solid var(--rule);
   background: var(--ground);
 }
 .bar {
   max-width: var(--shell); margin: 0 auto;
-  padding: 25px var(--mod) 35px;
-  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+  padding: 25px var(--mod) 34px;  /* +1px border = 160 */
+  /* Column gap only: a row gap lands between wrapped rows and is not a whole
+     module, which knocks every block below the header off the lattice. */
+  display: flex; align-items: center; gap: 0 1.25rem; flex-wrap: wrap;
 }
 /* 415px basis = 100px tall at the lockup's 1328:320 ratio. Basis must be
    definite, or the SVG's % width resolves against a parent sized by the SVG.
@@ -161,13 +181,15 @@ a:focus-visible, button:focus-visible {
   pointer-events: none;
 }
 
-.site-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-left: auto; }
+/* Column gap only, as with .bar: a row gap between wrapped nav lines is not a
+   whole module. */
+.site-nav { display: flex; gap: 0 1.5rem; flex-wrap: wrap; margin-left: auto; }
 /* Padded to a ~40px target: an 18px box meant ordinary vertical drift crossed
    the edge and the cursor flickered. The rule is text-decoration, not a border,
    so it stays tight to the text however tall the target gets. */
 .site-nav a {
   display: flex; align-items: center;
-  padding: 11px 0;
+  padding: 16px 0;
   font-size: 13px; color: var(--ink); cursor: pointer;
   text-decoration: underline;
   text-decoration-color: transparent;
@@ -181,15 +203,25 @@ a:focus-visible, button:focus-visible {
 }
 
 .theme-btn {
-  font-family: var(--body); font-size: 10px;
-  letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent); background: transparent;
-  border: 1px solid var(--accent); padding: 4px 9px; cursor: pointer;
+  border: 0; padding: 8px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.theme-btn:hover { color: var(--ink); }
+/* The icon names the destination, not the current state: a moon in light mode
+   means "go dark". */
+.theme-btn .tb-ico { display: none; }
+.theme-btn .tb-moon { display: block; }
+:root[data-theme="dark"] .theme-btn .tb-moon { display: none; }
+:root[data-theme="dark"] .theme-btn .tb-sun { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-btn .tb-moon { display: none; }
+  :root:not([data-theme="light"]) .theme-btn .tb-sun { display: block; }
 }
 
 /* ── Sections ─────────────────────────────────────────────────────── */
-section { padding: calc(var(--mod) * 2) 0; border-bottom: 1px solid var(--rule); }
-section:last-of-type { border-bottom: 0; }
+section { padding: calc(var(--mod) * 2) 0 63px; border-bottom: 1px solid var(--rule); }
+section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
 .sec-head {
   display: flex; align-items: baseline; gap: 1rem;
   margin-bottom: var(--mod); flex-wrap: wrap;
@@ -197,30 +229,35 @@ section:last-of-type { border-bottom: 0; }
 .sec-head h2 { font-size: 1.6rem; }
 
 .hero {
-  padding: calc(var(--mod) * 3) 0 calc(var(--mod) * 2);
+  padding: calc(var(--mod) * 3) 0 63px;
   border-bottom: 1px solid var(--rule);
 }
 .hero h1 {
-  font-size: clamp(2rem, 5.2vw, 3.1rem);
-  line-height: 1.12; letter-spacing: -0.015em; max-width: 22ch;
+  font-size: clamp(2.5rem, 5.2vw, 3rem);
+  line-height: calc(var(--mod) * 2); letter-spacing: -0.015em; max-width: 22ch;
 }
 /* Deck treatment: subordinate to the headline. Full-strength ink was rejected. */
 .hero p {
-  max-width: var(--measure); font-size: 1.05rem;
-  color: var(--muted); margin: 1.25rem 0 0;
+  max-width: var(--measure); font-size: 22px;
+  line-height: var(--mod); color: var(--muted); margin: var(--mod) 0 0;
 }
 
-.page-head { padding: calc(var(--mod) * 2) 0 0; }
-.page-head h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-top: 0.75rem; }
+.page-head {
+  padding: calc(var(--mod) * 2) 0 0;
+  /* flex column: no line box, so the label contributes exactly its own 32px
+     with no baseline descender under it */
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.page-head h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: calc(var(--mod) * 2); margin-top: 0; }
 
 /* Standfirst under the H1, as a display statement. Ink, not accent: the H1 is
    already accent Algebra, so matching it read as a second heading. */
-.page-lede { max-width: min(46rem, 100%); margin-top: 1.25rem; }
+.page-lede { max-width: min(46rem, 100%); margin-top: var(--mod); }
 .page-lede p {
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
-  line-height: 1.32;
+  font-size: 1.5rem;
+  line-height: var(--mod);
   color: var(--ink);
 }
 
@@ -231,21 +268,22 @@ section:last-of-type { border-bottom: 0; }
 .prose.wide > p,
 .prose.wide > ul,
 .prose.wide > ol { max-width: var(--measure); }
-.prose p { margin: 0 0 1.1rem; }
+.prose p { margin: 0 0 var(--mod); }
 .prose p:last-child { margin-bottom: 0; }
 /* Direct children only: these margins are for body copy. Card, person and pub
    headings are nested and set their own spacing. */
-.prose > h2 { font-size: 1.35rem; margin: 2rem 0 0.7rem; }
-.prose > h3 { font-size: 1.15rem; margin: 1.8rem 0 0.6rem; }
+.prose > h2 { font-size: 1.5rem; line-height: var(--mod); margin: calc(var(--mod) * 2) 0 var(--mod); }
+.prose > h3 { font-size: 1.25rem; line-height: var(--mod); margin: var(--mod) 0 var(--mod); }
 .prose ul, .prose ol { max-width: var(--measure); padding-left: 1.2rem; }
-.prose li { margin: 0 0 0.4rem; }
+.prose li { margin: 0; }
 
 .isl-callout {
   border-left: 2px solid var(--rule);
-  padding: 0.4rem 0 0.4rem 1.4rem;
-  margin: 1.8rem 0; max-width: var(--measure);
+  padding: 0 0 0 var(--mod);
+  margin: calc(var(--mod) * 2) 0; max-width: var(--measure);
 }
-.isl-callout h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+.isl-callout h3 { font-size: 1.125rem; line-height: var(--mod); margin-bottom: 0; }
+.isl-callout p { margin-bottom: var(--mod); }
 .isl-callout p:last-child { margin-bottom: 0; }
 
 /* ── Hub cards ────────────────────────────────────────────────────── */
@@ -255,15 +293,15 @@ section:last-of-type { border-bottom: 0; }
   gap: var(--mod);
 }
 .hub a {
-  display: flex; flex-direction: column; gap: 0.55rem;
+  display: flex; flex-direction: column; gap: 0;
   border: 1px solid var(--rule); background: var(--raised);
-  padding: calc(var(--mod) * 0.75);
+  padding: 31px;  /* +1px border = 32 */
   text-decoration: none; color: var(--ink);
 }
 .hub a:hover { border-color: var(--accent); }
 .hub .label { align-self: flex-start; }
-.hub h3 { font-size: 1.15rem; }
-.hub p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.hub h2 { font-size: 1.25rem; margin-bottom: 0; }
+.hub p { margin: 0; font-size: 16px; line-height: var(--mod); color: var(--muted); }
 
 /* Two even columns, so the four secondary cards form a 2x2 block instead of
    the 3-then-1 orphan a 3-wide track gives. 22rem min caps it at two columns
@@ -273,15 +311,15 @@ section:last-of-type { border-bottom: 0; }
 /* Lead card spans the row, so the hub reads as a hierarchy rather than five
    identical tiles. No arrow CTAs: the whole card is the link. */
 .hub a.feature { grid-column: 1 / -1; }
-.hub a.feature h3 { font-size: 1.5rem; }
-.hub a.feature p { font-size: 15px; max-width: var(--measure); }
+.hub a.feature h2 { font-size: 1.5rem; }
+.hub a.feature p { max-width: var(--measure); }
 
 .card {
   border: 1px solid var(--rule); background: var(--raised);
-  padding: calc(var(--mod) * 0.75);
+  padding: 31px;
 }
-.card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
-.card p { margin: 0; font-size: 14px; color: var(--muted); }
+.card h2 { font-size: 1.25rem; margin-bottom: 0; }
+.card p { margin: 0; font-size: 16px; line-height: var(--mod); color: var(--muted); }
 
 /* box-sizing puts borders inside the box, so a 448px card draws its right
    border at 447-448 while the grid line sits at 448-449 — adjacent, reading as
@@ -295,19 +333,28 @@ section:last-of-type { border-bottom: 0; }
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: var(--mod);
 }
-.person { border-top: 2px solid var(--accent); padding-top: 0.75rem; }
-.person h3 { font-size: 1.05rem; }
+.person { border-top: 2px solid var(--accent); padding-top: 30px; }
+.person h2 { font-size: 1.05rem; }
 .person .role {
   font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--muted); margin: 0.15rem 0 0.6rem;
+  color: var(--muted); margin: 0 0 var(--mod);
 }
-.person p { margin: 0 0 0.6rem; font-size: 13.5px; color: var(--muted); }
+.person p { margin: 0 0 var(--mod); font-size: 16px; line-height: var(--mod); color: var(--muted); }
 .person p:last-child { margin-bottom: 0; }
 
 /* ── Writing ──────────────────────────────────────────────────────── */
-.pub { border-top: 1px solid var(--rule); padding-top: 0.85rem; margin-top: var(--mod); }
-.pub h3 { font-size: 1rem; }
-.pub .meta { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; margin: 0.2rem 0 0; }
+.pub { border-top: 1px solid var(--rule); padding-top: 31px; margin-top: calc(var(--mod) * 2); }
+.pub h3 { font-size: 1.125rem; line-height: var(--mod); }
+.pub .meta { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; margin: 0; }
+.isl-substack-more { margin: var(--mod) 0 0; font-size: 16px; }
+
+/* Substack subscribe widget. 320px = 10 modules, so the iframe stays on the
+   lattice. Its interior is cross-origin and cannot be styled from here. */
+.isl-substack-embed { margin: calc(var(--mod) * 2) 0 0; max-width: 480px; }
+.isl-substack-embed iframe {
+  display: block; width: 100%; height: 320px;
+  border: 1px solid var(--rule); background: #fff;
+}
 
 /* ── Closing block ────────────────────────────────────────────────────
    Contact band + footer as one region. Pinned to the viewport bottom by the
@@ -348,9 +395,9 @@ section:last-of-type { border-bottom: 0; }
 }
 .contact dt {
   font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--band-accent); margin-bottom: 0.3rem;
+  color: var(--band-accent); margin-bottom: 0;
 }
-.contact dd { margin: 0; font-size: 1rem; }
+.contact dd { margin: 0; font-size: 20px; line-height: var(--mod); }
 
 /* ── Footer ── sits inside .closing, so it inherits the band ── */
 .site-footer .wrap { padding-top: var(--mod); padding-bottom: var(--mod); }
@@ -362,13 +409,15 @@ section:last-of-type { border-bottom: 0; }
 @media (max-width: 680px) {
   /* var(--mod), not 1rem: at 16px the logo sat left of the content edge and off
      the grid, which both start at 32px. */
-  .bar { padding: 25px var(--mod) 25px; gap: 0.75rem 1rem; }
+  /* 32 + 48 logo + 64 nav + 47 + 1px border = 192 = 6 modules */
+  .bar { padding: var(--mod) var(--mod) 47px; gap: 0 1rem; }
   /* 230px ≈ 55px tall. The 100px spec is a desktop instruction; at full size the
      lockup is 91% of a 375px viewport. */
-  .bar .logo { flex: 0 1 230px; }
+  .bar .logo { flex: 0 0 199px; }  /* 48px tall */
   /* basis 100% puts nav on its own row; the toggle rides the logo row. */
-  .site-nav { margin-left: 0; flex: 1 1 100%; gap: 1rem; order: 1; }
-  .theme-btn { order: 0; margin-left: auto; min-height: 44px; }
+  .site-nav { margin-left: 0; flex: 1 1 100%; gap: 0 1rem; }
+  /* Out of flow: in flow it took a third row once nav rows became 64px. */
+  .theme-btn { position: absolute; top: var(--mod); right: var(--mod); min-height: 44px; }
 }
 
 /* Touch targets keyed to input type, not width — tablets sit above the 680px
