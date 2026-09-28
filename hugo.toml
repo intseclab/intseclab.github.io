@@ -31,10 +31,6 @@ disableKinds = ["taxonomy", "term"]
   # The Blog link, post list and subscribe box all appear when this is non-empty.
   # Paste the publication URL here once it exists, e.g. https://isl.substack.com
   substackURL  = ""
-  # Cloudflare Worker that relays the Substack feed with a CORS header, so the
-  # browser can read it. Posts stay hidden until this is set — deliberately, so
-  # we never ship a third-party proxy by accident. See design/cloudflare-session.md
-  substackProxy = ""
 
   # Landing-page hub cards. Order here is the order on the page.
   [[params.hub]]

@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  # The Substack feed is read at build time, so the site rebuilds daily to pick
+  # up new posts. Substack has no publish webhook, so this is a poll. Off-the-hour
+  # minute because :00 is the busiest. GitHub delays scheduled runs under load —
+  # use workflow_dispatch to publish immediately.
+  schedule:
+    - cron: '23 7 * * *'
   workflow_dispatch:
 
 permissions:
