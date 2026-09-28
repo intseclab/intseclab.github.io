@@ -43,6 +43,11 @@ nav a, .logo a, h1 a, h2 a { border-bottom: none; }
 /* The lockup is currentColor, so the logo tracks the heading blue. */
 .logo a { color: var(--isl-heading); }
 .logo a svg { display: block; height: 40px; width: auto; border-radius: 0; }
+/* The logo only got vertical breathing room by sharing a flex line with #menu,
+   which is --header-height tall. On mobile .header-nav wraps, the logo lands on
+   its own line and collapses to the SVG's height, flush to the top. The SVG is
+   display:block, so the inherited line-height cannot pad it either. */
+.logo { min-height: var(--header-height); }
 
 /* Trims PaperMod's near-full-viewport min-height on the sparse home page. */
 .main:has(.isl-hero) { min-height: min(70vh, 520px); }
