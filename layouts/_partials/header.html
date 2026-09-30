@@ -13,9 +13,6 @@
         {{- $url := .URL | relLangURL }}
         <a href="{{ $url }}"{{ if eq $cur $url }} aria-current="page"{{ end }}>{{ .Name }}</a>
       {{- end }}
-      {{- with site.Params.substackURL }}
-        <a href="{{ . }}">Blog ↗</a>
-      {{- end }}
     </nav>
 
     {{/* Icon-only: the accessible name is on the button and the JS keeps it in

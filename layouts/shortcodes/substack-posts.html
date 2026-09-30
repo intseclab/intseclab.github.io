@@ -15,21 +15,37 @@
 {{- with site.Params.substackURL }}
   {{- $base := strings.TrimSuffix "/" . }}
   {{- $count := int ($.Get "count" | default 6) }}
-  {{- with $.Get "heading" | default "Blog" }}<h2>{{ . }}</h2>{{ end }}
+  {{- $heading := $.Get "heading" | default "Blog" }}
   {{- $feed := printf "%s/feed" $base }}
+  {{- $items := slice }}
+  {{- $failed := false }}
   {{- with try (resources.GetRemote $feed) }}
     {{- with .Err }}
       {{- warnf "substack: could not fetch %s: %s" $feed . }}
+      {{- $failed = true }}
     {{- else with .Value }}
       {{- with (. | transform.Unmarshal).channel }}
-        {{- range first $count .item }}
-        <div class="pub">
-          <h3><a href="{{ .link }}">{{ .title }}</a></h3>
-          <p class="meta">{{ with .pubDate }}{{ dateFormat "2 January 2006" . }}{{ end }}</p>
-        </div>
+        {{/* Absent on a publication with no posts. One <item> unmarshals to a
+             map, several to a slice; `first` needs a slice either way. */}}
+        {{- with .item }}
+          {{- $items = cond (reflect.IsSlice .) . (slice .) }}
         {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
-  <p class="isl-substack-more"><a href="{{ $base }}">Read on Substack &rarr;</a></p>
+  {{/* Nothing renders on an empty publication: a lone heading or a lone
+       "read more" link would attach itself to whatever sits above. The link
+       still shows on a fetch failure, so a broken feed leaves a route out. */}}
+  {{- if or $items $failed }}
+    {{- with $items }}
+      {{- with $heading }}<h2>{{ . }}</h2>{{ end }}
+      {{- range first $count . }}
+      <div class="pub">
+        <h3><a href="{{ .link }}">{{ .title }}</a></h3>
+        <p class="meta">{{ with .pubDate }}{{ dateFormat "2 January 2006" . }}{{ end }}</p>
+      </div>
+      {{- end }}
+    {{- end }}
+    <p class="isl-substack-more"><a href="{{ $base }}">Read on Substack &rarr;</a></p>
+  {{- end }}
 {{- end }}

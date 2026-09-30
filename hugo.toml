@@ -28,9 +28,8 @@ disableKinds = ["taxonomy", "term"]
   # Matches --ground in isl.css. Used for theme-color and the pinned-tab mask.
   themeColor   = "#FDF2E6"
 
-  # The Blog link, post list and subscribe box all appear when this is non-empty.
-  # Paste the publication URL here once it exists, e.g. https://isl.substack.com
-  substackURL  = ""
+  # The post list and subscribe box on /writing/ appear when this is non-empty.
+  substackURL  = "https://intseclab.substack.com/"
 
   # Landing-page hub cards. Order here is the order on the page.
   [[params.hub]]
