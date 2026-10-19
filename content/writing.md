@@ -1,8 +1,11 @@
 ---
 title: "Writing"
+# Not live yet: no content to show. Delete this line to publish the page;
+# the nav item reappears on its own (see _partials/header.html).
+draft: true
 description: >-
   Research publications from ISL, including the RAND report Highly Secure Inference Data Centers, plus writing on why the work matters.
-heading: "Publications & blog"
+heading: "Publications and blog posts"
 # Card grid needs the full shell, not the reading measure.
 wide: true
 ---

@@ -35,6 +35,7 @@
   /* Grid module. Header height is pinned to 5 modules; see header below. */
   --mod: 32px;
   --measure: 30rem;
+  --measure-prose: 36rem;  /* 576px = 18 modules */
   /* Inner width 928px = 29 modules, so 2-/3-col tracks land on 448/288. */
   --shell: 62rem;
   /* Grid phase, locked to the content column's left edge, not the viewport.
@@ -128,6 +129,11 @@ h1, h2, h3 {
 }
 
 a { color: var(--accent); }
+/* External-link arrow. em, so it tracks whatever size it sits in. line-height:0
+   is load-bearing: the glyph falls back to a font whose metrics otherwise push
+   the line box past 32px, which took every paragraph with a link off the
+   lattice. The lift uses position, since vertical-align grows the box too. */
+.ext { font-size: 0.7em; line-height: 0; position: relative; top: -0.1em; }
 a:focus-visible, button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -183,7 +189,12 @@ a:focus-visible, button:focus-visible {
 
 /* Column gap only, as with .bar: a row gap between wrapped nav lines is not a
    whole module. */
-.site-nav { display: flex; gap: 0 1.5rem; flex-wrap: wrap; margin-left: auto; }
+/* margin-right clears the out-of-flow theme button: 2 modules covers its 31px
+   box plus the gap it used to sit behind. */
+.site-nav {
+  display: flex; gap: 0 1.5rem; flex-wrap: wrap;
+  margin-left: auto; margin-right: calc(var(--mod) * 2);
+}
 /* Padded to a ~40px target: an 18px box meant ordinary vertical drift crossed
    the edge and the cursor flickered. The rule is text-decoration, not a border,
    so it stays tight to the text however tall the target gets. */
@@ -202,7 +213,15 @@ a:focus-visible, button:focus-visible {
   text-decoration-color: var(--accent);
 }
 
+/* Out of flow at every width, not just mobile. In flow it is the last item on a
+   wrapping flex line, so at narrow-desktop widths it dropped to a second row
+   and added its own height — 31px, not a module — which knocked every block
+   below the header off the lattice. Out of flow the bar is logo + nav only, and
+   the header height is the logo's 100px plus its padding at every width.
+   The nav's right margin reserves the space it used to occupy. */
 .theme-btn {
+  position: absolute; right: var(--mod); top: 50%;
+  transform: translateY(-50%);
   color: var(--accent); background: transparent;
   border: 0; padding: 8px; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
@@ -222,15 +241,30 @@ a:focus-visible, button:focus-visible {
 /* ── Sections ─────────────────────────────────────────────────────── */
 section { padding: calc(var(--mod) * 2) 0 63px; border-bottom: 1px solid var(--rule); }
 section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
+/* Column, so the label sits above the heading. align-items rather than baseline
+   also sidesteps the strut descender a baseline row adds under the label. */
 .sec-head {
-  display: flex; align-items: baseline; gap: 1rem;
-  margin-bottom: var(--mod); flex-wrap: wrap;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+  margin-bottom: var(--mod);
 }
 .sec-head h2 { font-size: 1.6rem; }
 
+/* The hero frames the first screen: it fills the viewport below the header, so
+   the closing band sits under the fold instead of showing on load.
+
+   round(up, …) keeps it on the lattice — the hero becomes the next whole module
+   past the available height, which also guarantees nothing below it peeks.
+   Rounding down would leave up to 31px of the band showing.
+
+   --header-h is set by the script in footer.html, because the header is 160px
+   at most widths but 224px where the nav wraps. The plain calc() first is the
+   fallback for no-JS and for browsers without round(): right height, off the
+   lattice. */
 .hero {
   padding: calc(var(--mod) * 3) 0 63px;
   border-bottom: 1px solid var(--rule);
+  min-height: calc(100dvh - var(--header-h, 160px));
+  min-height: calc(round(up, 100dvh - var(--header-h, 160px), var(--mod)));
 }
 .hero h1 {
   font-size: clamp(2.5rem, 5.2vw, 3rem);
@@ -241,6 +275,9 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
   max-width: var(--measure); font-size: 22px;
   line-height: var(--mod); color: var(--muted); margin: var(--mod) 0 0;
 }
+/* The only route off the landing page besides the nav, so it reads as link
+   rather than deck: accent colour, not --muted. */
+.hero p.hero-more { font-size: 1.125rem; color: var(--accent); }
 
 .page-head {
   padding: calc(var(--mod) * 2) 0 0;
@@ -261,20 +298,23 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
   color: var(--ink);
 }
 
-.prose { max-width: var(--measure); }
+/* Wider than --measure: the page lede runs to 46rem, so a 30rem body left the
+   right half of the page empty and the two did not read as one column.
+   36rem = 576px = 18 modules. */
+.prose { max-width: var(--measure-prose); }
 /* Card pages need the full shell — the reading measure would squeeze the grid
    to two columns. Text children keep the measure so prose stays readable. */
 .prose.wide { max-width: none; }
 .prose.wide > p,
 .prose.wide > ul,
-.prose.wide > ol { max-width: var(--measure); }
+.prose.wide > ol { max-width: var(--measure-prose); }
 .prose p { margin: 0 0 var(--mod); }
 .prose p:last-child { margin-bottom: 0; }
 /* Direct children only: these margins are for body copy. Card, person and pub
    headings are nested and set their own spacing. */
 .prose > h2 { font-size: 1.5rem; line-height: var(--mod); margin: calc(var(--mod) * 2) 0 var(--mod); }
 .prose > h3 { font-size: 1.25rem; line-height: var(--mod); margin: var(--mod) 0 var(--mod); }
-.prose ul, .prose ol { max-width: var(--measure); padding-left: 1.2rem; }
+.prose ul, .prose ol { max-width: var(--measure-prose); padding-left: 1.2rem; }
 .prose li { margin: 0; }
 
 .isl-callout {
@@ -299,8 +339,26 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
   text-decoration: none; color: var(--ink);
 }
 .hub a:hover { border-color: var(--accent); }
+/* One module between label and title. Has to be a whole module, so the card is
+   5 modules with the gap where the blurb used to be rather than 4 without it. */
 .hub .label { align-self: flex-start; }
-.hub h2 { font-size: 1.25rem; margin-bottom: 0; }
+/* Scoped, not on .label itself — the same box is used in page heads, contact
+   and project cards. 12px still sits in the 24px line-height, so the bordered
+   box stays 32 and the card height is unaffected. */
+.hub .label { font-size: 12px; }
+
+/* No margin under the label. A margin would have to be a whole module, and 32px
+   read as a gap; the title's own two-module line box puts ~15px of half-leading
+   above the type instead, which is the space you actually want. Costs nothing:
+   label 32 + line box 64 is the same 96 as label 32 + margin 32 + box 32. */
+/* 1.5rem, not 2: at 32px the longer titles ("Publications and blog posts",
+   "Open roles and applications") wrapped to two lines in a 448px column, which
+   made the four secondary cards taller than the lead card. */
+.hub h2 {
+  font-size: 1.5rem;
+  line-height: calc(var(--mod) * 2);
+  margin-bottom: 0;
+}
 .hub p { margin: 0; font-size: 16px; line-height: var(--mod); color: var(--muted); }
 
 /* Two even columns, so the four secondary cards form a 2x2 block instead of
@@ -311,8 +369,19 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
 /* Lead card spans the row, so the hub reads as a hierarchy rather than five
    identical tiles. No arrow CTAs: the whole card is the link. */
 .hub a.feature { grid-column: 1 / -1; }
-.hub a.feature h2 { font-size: 1.5rem; }
+/* Lead card: one step up again, so the hierarchy survives having no blurb.
+   Line box inherited from .hub h2, so the card height matches the others. */
+.hub a.feature h2 { font-size: 2.5rem; }
 .hub a.feature p { max-width: var(--measure); }
+
+/* Centered contents, lead card only — the four secondary cards stay left
+   aligned, so the centering reads as emphasis rather than as the hub's style.
+   Alignment only: the card is still 929x160, five modules, as before.
+   margin-inline on the blurb because its max-width would otherwise hold it
+   left; align-self on the label because the card is a flex column. */
+.hub a.feature { text-align: center; }
+.hub a.feature .label { align-self: center; }
+.hub a.feature p { margin-inline: auto; }
 
 .card {
   border: 1px solid var(--rule); background: var(--raised);
@@ -339,7 +408,9 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
   font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--muted); margin: 0 0 var(--mod);
 }
-.person p { margin: 0 0 var(--mod); font-size: 16px; line-height: var(--mod); color: var(--muted); }
+/* Ink, not muted: the bios are this page's body copy, and the role label above
+   them is muted, so the card needs the two to differ. */
+.person p { margin: 0 0 var(--mod); font-size: 16px; line-height: var(--mod); color: var(--ink); }
 .person p:last-child { margin-bottom: 0; }
 
 /* ── Writing ──────────────────────────────────────────────────────── */
@@ -393,6 +464,9 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
   display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: var(--mod);
 }
+/* The UA gives <dl> 1em top and bottom, which put 40px — not a module — inside
+   the band and left it 8px off the lattice. */
+.contact dl { margin: 0; }
 .contact dt {
   font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--band-accent); margin-bottom: 0;
@@ -418,9 +492,11 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
      lockup is 91% of a 375px viewport. */
   .bar .logo { flex: 0 0 199px; }  /* 48px tall */
   /* basis 100% puts nav on its own row; the toggle rides the logo row. */
-  .site-nav { margin-left: 0; flex: 1 1 100%; gap: 0 1rem; }
-  /* Out of flow: in flow it took a third row once nav rows became 64px. */
-  .theme-btn { position: absolute; top: var(--mod); right: var(--mod); min-height: 44px; }
+  /* No right margin here: the nav has its own row, so it never meets the
+     button. */
+  .site-nav { margin-left: 0; margin-right: 0; flex: 1 1 100%; gap: 0 1rem; }
+  /* Pinned to the logo row rather than centred, since the bar is two rows. */
+  .theme-btn { top: var(--mod); transform: none; min-height: 44px; }
 }
 
 /* Touch targets keyed to input type, not width — tablets sit above the 680px

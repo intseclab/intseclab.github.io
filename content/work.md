@@ -1,8 +1,11 @@
 ---
 title: "Our Work"
+# Not live yet: no content to show. Delete this line to publish the page;
+# the nav item reappears on its own (see _partials/header.html).
+draft: true
 description: >-
   ISL's current project: a secure inference data center, designed with STPA-Sec, formal methods and other high-assurance approaches.
-heading: "Current projects"
+heading: "What we do and how"
 # Card grid needs the full shell, not the reading measure.
 wide: true
 ---

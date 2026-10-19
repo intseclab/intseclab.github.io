@@ -1,21 +1,12 @@
 {{ define "main" }}
 <div class="wrap">
+  {{/* One screen: headline, deck, one link. The hub of five cards was removed —
+       it duplicated the nav. See design/landing-page-option-b.md for the
+       content-block version to move toward once there is content to show. */}}
   <section class="hero">
     <h1>{{ site.Params.headline }}</h1>
     <p>{{ site.Params.tagline }}</p>
-  </section>
-
-  {{/* Hub cards. Each links to a real page — never an anchor. */}}
-  <section style="border-bottom:0">
-    <div class="hub">
-      {{- range site.Params.hub }}
-      <a href="{{ .url | relLangURL }}"{{ with .feature }} class="feature"{{ end }}>
-        <span class="label">{{ .label }}</span>
-        <h2>{{ .title }}</h2>
-        <p>{{ .blurb }}</p>
-      </a>
-      {{- end }}
-    </div>
+    <p class="hero-more"><a href="{{ "/about/" | relLangURL }}">Learn more about ISL &rarr;</a></p>
   </section>
 </div>
 {{ end }}

@@ -6,6 +6,18 @@
 </div>
 
 <script>
+  /* Header height feeds the hero's min-height. Measured, not hardcoded: the
+     header is 160px at most widths and 224px where the nav wraps. Observed
+     rather than read once, so it survives resize and font load. */
+  (function () {
+    var header = document.querySelector(".site-header");
+    if (!header || !window.ResizeObserver) return;
+    new ResizeObserver(function () {
+      document.documentElement.style.setProperty(
+        "--header-h", header.getBoundingClientRect().height + "px");
+    }).observe(header);
+  })();
+
   (function () {
     var btn = document.getElementById("themeBtn");
     var root = document.documentElement;

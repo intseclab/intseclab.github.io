@@ -31,35 +31,35 @@ disableKinds = ["taxonomy", "term"]
   # The post list and subscribe box on /writing/ appear when this is non-empty.
   substackURL  = "https://intseclab.substack.com/"
 
-  # Landing-page hub cards. Order here is the order on the page.
+  # Landing-page hub cards. NOT CURRENTLY RENDERED — the landing page is the
+  # hero plus one link (see layouts/home.html). Kept because these titles are
+  # the page headings, and because design/landing-page-option-b.md plans to
+  # bring a version of this back once there is content to put in it.
   [[params.hub]]
     label = "About"
-    title = "What we're doing, and why"
-    blurb = "The problem, and why ISL exists."
+    title = "What we are doing, and why"
     url   = "/about/"
     # Lead card: spans the hub row.
     feature = true
   [[params.hub]]
     label = "Our Work"
-    title = "Current projects"
-    blurb = "What we're building, and how."
+    title = "What we do and how"
     url   = "/work/"
   [[params.hub]]
     label = "Writing"
-    title = "Publications & blog"
-    blurb = "Research papers and blog posts."
+    title = "Publications and blog posts"
     url   = "/writing/"
   [[params.hub]]
     label = "People"
-    title = "Directors"
-    blurb = "Who runs ISL."
+    title = "Meet our team"
     url   = "/team/"
   [[params.hub]]
     label = "Careers"
-    title = "We are growing"
-    blurb = "Open roles and applications."
+    title = "Open roles and applications"
     url   = "/careers/"
 
+# Nav. Items whose page is a draft are skipped automatically in header.html,
+# so Our Work and Writing stay listed here and reappear when they go live.
 [menu]
   [[menu.main]]
     name   = "About"
