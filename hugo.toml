@@ -51,7 +51,7 @@ disableKinds = ["taxonomy", "term"]
     url   = "/writing/"
   [[params.hub]]
     label = "People"
-    title = "Meet our team"
+    title = "Meet our leadership"
     url   = "/team/"
   [[params.hub]]
     label = "Careers"

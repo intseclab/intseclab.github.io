@@ -30,7 +30,7 @@
   --band-ink:    #FDF2E6;
   --band-accent: #BCC8AD;  /* Light Green */
   --band-rule:   transparent;
-  --band-line:   rgba(253, 242, 230, 0.10);  /* grid on the band */
+  --band-line:   rgba(253, 242, 230, 0.08);  /* grid on the band */
 
   /* Grid module. Header height is pinned to 5 modules; see header below. */
   --mod: 32px;
@@ -299,7 +299,9 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
 
 /* Standfirst under the H1, as a display statement. Ink, not accent: the H1 is
    already accent Algebra, so matching it read as a second heading. */
-.page-lede { max-width: min(46rem, 100%); margin-top: var(--mod); }
+/* Same measure as the prose below it: at 46rem the standfirst ran wider
+   than the body text. */
+.page-lede { max-width: min(var(--measure-prose), 100%); margin-top: var(--mod); }
 .page-lede p {
   margin: 0;
   font-family: var(--display);
@@ -459,8 +461,9 @@ section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
     linear-gradient(to bottom, var(--band-line) 0, var(--band-line) 1px, transparent 1px);
   background-size: var(--mod) var(--mod);
   background-position: var(--grid-x) 100%;
-  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 8%, transparent 84%);
-          mask-image: linear-gradient(to top, #000 0%, #000 8%, transparent 84%);
+  /* Uniform, not faded. The fade was there to soften the seam where the page
+     grid meets the band's, but the band's own colour change already does that.
+     For a plain green band instead, drop background-image above. */
 }
 
 .contact {
