@@ -3,7 +3,8 @@
    To be pasted into the Ashby console.
 
    Palette mirrors assets/css/isl.css -- should be kept in sync if changes occur.
-   Note: Dark mode follows OS only; theme toggle can't reach inside iframe. */
+   Note: dark mode follows the site's theme toggle, because isl.css declares
+   color-scheme and an iframe reads that as prefers-color-scheme. */
 
 @font-face {
   font-family: "IBM Plex Serif";
@@ -254,4 +255,10 @@ footer, footer [class] { color: var(--isl-faint); }
 button[class*="_button_"][class*="_primary_"] {
   background-color: var(--isl-accent);
   color: var(--isl-onaccent);
+}
+
+/* Hover. Needed because both of Ashby's primary tokens are pinned above, so
+   their own hover swap has nothing left to change. */
+button[class*="_button_"][class*="_primary_"]:hover {
+  background-color: var(--isl-ink);
 }

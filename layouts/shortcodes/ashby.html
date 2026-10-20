@@ -1,8 +1,10 @@
 {{/*
-  Ashby job board embed. The board renders in a cross-origin iframe, so page CSS
-  cannot reach it — customCssUrl is the only styling hook, and it injects our
-  stylesheet inside the frame. Absolute URL required: the iframe resolves it
-  against jobs.ashbyhq.com, not us.
+  Ashby job board embed. Cross-origin iframe, so page CSS cannot reach it.
+
+  Styling comes from the copy of static/ashby/job-board.css pasted into the
+  Ashby console. customCssUrl below is passed through to the iframe URL but
+  Ashby does not load it — tested with a reachable stylesheet and nothing
+  fetched it. Kept in case that changes; it is not the live mechanism.
 */}}
 {{- $org := site.Params.ashbyOrg -}}
 {{- $board := printf "https://jobs.ashbyhq.com/%s" $org -}}
