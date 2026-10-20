@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.Lang }}" dir="ltr">
+<head>{{ partial "head.html" . }}</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  {{ partial "header.html" . }}
+  <main id="main">{{ block "main" . }}{{ end }}</main>
+  {{/* Contact band + footer as one block: shared background, grid and fade. */}}
+  <footer class="closing">
+    {{ if .IsHome }}{{ partial "contact.html" . }}{{ end }}
+    {{ partial "footer.html" . }}
+  </footer>
+</body>
+</html>

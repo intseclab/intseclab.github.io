@@ -1,0 +1,10 @@
+{{- /* Markdown links. External ones open in a new tab, marked with an arrow so
+       that is not a surprise; internal and mailto links are left alone.
+       rel="noopener" because target="_blank" otherwise gives the new page a
+       handle on ours. The arrow is inside the link and non-breaking, so it
+       cannot wrap onto its own line. */ -}}
+{{- $ext := or (hasPrefix .Destination "http://") (hasPrefix .Destination "https://") -}}
+<a href="{{ .Destination | safeURL }}"
+  {{- with .Title }} title="{{ . }}"{{ end }}
+  {{- if $ext }} target="_blank" rel="noopener"{{ end -}}
+>{{ .Text }}{{ if $ext }}&nbsp;<span class="ext">&#8599;</span>{{ end }}</a>

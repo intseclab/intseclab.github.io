@@ -1,9 +1,12 @@
-{{- define "main" }}
-<div class="isl-hero">
-  <h1>{{ .Site.Params.headline }}</h1>
-  <p class="isl-tagline">{{ .Site.Params.tagline }}</p>
+{{ define "main" }}
+<div class="wrap">
+  {{/* One screen: headline, deck, one link. The hub of five cards was removed —
+       it duplicated the nav. See design/landing-page-option-b.md for the
+       content-block version to move toward once there is content to show. */}}
+  <section class="hero">
+    <h1>{{ site.Params.headline }}</h1>
+    <p>{{ site.Params.tagline }}</p>
+    <p class="hero-more"><a href="{{ "/about/" | relLangURL }}">Learn more about ISL &rarr;</a></p>
+  </section>
 </div>
-<div class="post-content md-content">
-  {{ .Content }}
-</div>
-{{- end }}
+{{ end }}

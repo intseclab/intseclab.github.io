@@ -1,0 +1,264 @@
+/* Custom CSS for Ashby job board
+
+   To be pasted into the Ashby console.
+
+   Palette mirrors assets/css/isl.css -- should be kept in sync if changes occur.
+   Note: dark mode follows the site's theme toggle, because isl.css declares
+   color-scheme and an iframe reads that as prefers-color-scheme. */
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/IBMPlexSerif-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/Merriweather-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/Merriweather-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://intelligencesecuritylaboratories.org/fonts/Merriweather-Italic.woff2") format("woff2");
+}
+
+:root {
+  --isl-ground: #FDF2E6;
+  --isl-raised: #FDF2E6;  /* = ground: cards are outlines, as on the site */
+  --isl-field:  #FFFCF8;  /* form controls only, so inputs read as editable */
+  --isl-ink:    #1F1E1B;
+  --isl-muted:  #57544D;
+  --isl-faint:  #67645C;
+  --isl-accent: #474A62;
+  --isl-border: #D9CBB8;
+  --isl-onaccent: #FDF2E6;
+  --isl-overlay: rgba(253, 242, 230, 0.92);
+
+  --colorAppBackground: var(--isl-ground);
+
+  /* !important: the Ashby admin theme sets these inline on <html>. 600 is their
+     link and active-tab colour, so it has to read as text. */
+  --colorPrimary900: #474A62 !important;
+  --colorPrimary600: #474A62 !important;
+
+  --fontFamily: "Merriweather", Georgia, "Times New Roman", serif;
+
+  --borderRadiusContainer: 3px;
+  --borderRadiusControl: 3px;
+  --borderRadiusButton: 3px;
+
+  --widthMaxJobBoard: 720px;
+
+  /* Tells the browser to paint native controls, dropdown popups and scrollbars
+     to match. Without it the select renders with the light UA theme and
+     background-color never shows. */
+  color-scheme: light;
+}
+
+/* Dark. Blue is 1.9:1 on Soft Black and unusable, so the accent becomes
+   Light Green, matching the site. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --isl-ground: #1F1E1B;
+    --isl-raised: #262521;  /* lifts here, as on the site in dark */
+    --isl-field:  #262521;
+    --isl-ink:    #FDF2E6;
+    --isl-muted:  #BFB6A8;
+    --isl-faint:  #A9A093;
+    --isl-accent: #BCC8AD;
+    --isl-border: #3A3832;
+    --isl-onaccent: #1F1E1B;
+    --isl-overlay: rgba(31, 30, 27, 0.92);
+
+    --colorPrimary900: #BCC8AD !important;
+    --colorPrimary600: #BCC8AD !important;
+  }
+}
+
+body {
+  background-color: var(--isl-ground);
+  color: var(--isl-ink);
+}
+
+/* ── Text ── */
+.ashby-job-board-heading {
+  color: var(--isl-accent);
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.ashby-job-board-heading-count { color: var(--isl-faint); }
+
+.ashby-department-heading,
+.ashby-job-posting-brief-department-heading {
+  color: var(--isl-accent);
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.ashby-job-posting-brief-title,
+.ashby-job-posting-heading {
+  color: var(--isl-accent);
+  font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.ashby-job-posting-brief-details { color: var(--isl-muted); }
+
+.ashby-job-board-filters-label,
+.ashby-job-board-reset-filters-label { color: var(--isl-faint); }
+
+/* ── Cards and controls ──
+   Ashby leaves these transparent for its own white page. Cards get a border and
+   sit at ground, like the site's; controls get --isl-field so they look
+   operable. */
+.ashby-job-posting-brief {
+  background-color: var(--isl-raised);
+  border: 1px solid var(--isl-border);
+  color: var(--isl-ink);
+}
+
+.ashby-job-board-filter,
+.ashby-job-board-filter select {
+  background-color: var(--isl-field);
+  border: 1px solid var(--isl-border);
+  color: var(--isl-ink);
+}
+
+/* Ashby paints a solid white linear-gradient over the filter selects, which
+   covers background-color entirely — in dark mode that left cream text on
+   white. appearance:none drops the native control styling with it; Ashby draws
+   its own chevron, so nothing is lost. */
+select.ashby-job-board-filter {
+  appearance: none;
+  background-image: none;
+}
+
+.ashby-job-posting-brief { margin-bottom: 10px; }
+
+/* Compensation line. Ashby's own slate (#545B6D) is ~2.2:1 on our dark ground
+   and it carries no ashby-* class, so target it by position in the card. */
+.ashby-job-posting-brief p { color: var(--isl-muted); }
+
+/* Inner panels default to white, one level in from --colorAppBackground. */
+.ashby-job-posting-left-pane,
+.ashby-job-posting-description-container,
+.ashby-application-form-container,
+.ashby-application-form-autofill-pane,
+.ashby-application-form-autofill-input-root {
+  background-color: transparent;
+}
+
+/* Translucent overlays: need a color, not transparent. */
+.ashby-application-form-autofill-input-drag-layer,
+.ashby-application-form-autofill-input-pending-layer {
+  background-color: var(--isl-overlay);
+}
+
+/* ── Form fields ──
+   Ashby's inputs have no background of their own, so on our ground they were
+   tone-on-tone with only a hairline to mark them as editable. */
+.ashby-application-form-container input,
+.ashby-application-form-container textarea,
+.ashby-application-form-container select {
+  background-color: var(--isl-field);
+  border-color: var(--isl-border);
+  color: var(--isl-ink);
+}
+
+/* Yes/No toggles, plus the per-field Upload File button. Ashby's unselected
+   label is #a8aebd, which is 2:1 against our ground (not very readable). The selected
+   state is left alone: it carries an _active_ class that paints itself in
+   --colorPrimary900 at a higher specificity than this rule, so it still wins. */
+.ashby-application-form-field-entry button {
+  background-color: var(--isl-field);
+  border-color: var(--isl-border);
+  color: var(--isl-faint);
+}
+
+input[type="file"] {
+  font-family: inherit;
+  color: var(--isl-ink);
+}
+
+input[type="file"]::file-selector-button {
+  font-family: inherit;
+  background-color: transparent;
+  border: 1px solid var(--isl-border);
+  border-radius: 3px;
+  color: var(--isl-ink);
+}
+
+/* ── Controls ── */
+.ashby-application-form-submit-button {
+  background-color: var(--isl-accent);
+  color: var(--isl-onaccent);
+  border-radius: 3px;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
+}
+
+.ashby-job-board-back-to-all-jobs-button {
+  border-radius: 3px;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
+  color: var(--isl-accent);
+}
+
+.ashby-application-form-question-title,
+.ashby-application-form-section-header-title { color: var(--isl-accent); }
+
+.ashby-application-form-question-description,
+.ashby-application-form-section-header-description,
+.ashby-application-form-texting-consent-description { color: var(--isl-muted); }
+
+/* Placeholders: Ashby's #7D8699 is 3.6:1 on our ground. */
+.ashby-application-form-container ::placeholder { color: var(--isl-faint); }
+
+/* ── Contrast fixes: all measured under 4.5:1 ──
+   Reached by element or ashby-* ancestor, since their own classes are build
+   hashes that change on every Ashby deploy. */
+
+/* Footer links: 2.5:1 in dark. [class] needed — `footer a` loses to their
+   hashed class on specificity. */
+footer, footer [class] { color: var(--isl-faint); }
+
+/* Posting detail headings — Location, Compensation. 2.5:1 in dark. */
+.ashby-job-posting-left-pane h2 { color: var(--isl-faint); }
+
+/* "or drag and drop here". 2.5:1 in dark. */
+.ashby-application-form-input-file-dropzone-instructions {
+  color: var(--isl-muted);
+}
+
+/* Tabs: 3.3:1 and 4.0:1 in light. The slider marks the active one, so both
+   can take the accent. */
+.ashby-job-posting-right-pane-overview-tab,
+.ashby-job-posting-right-pane-application-tab { color: var(--isl-accent); }
+
+/* "Apply for this Job" — no ashby-* hook, so matched on the stable part of the
+   class name. Two attributes to outweigh their rule, which bakes in white text:
+   untouched it was 4.0:1 light, 3.2:1 dark. */
+button[class*="_button_"][class*="_primary_"] {
+  background-color: var(--isl-accent);
+  color: var(--isl-onaccent);
+}
+
+/* Hover. Needed because both of Ashby's primary tokens are pinned above, so
+   their own hover swap has nothing left to change. */
+button[class*="_button_"][class*="_primary_"]:hover {
+  background-color: var(--isl-ink);
+}

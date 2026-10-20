@@ -1,0 +1,17 @@
+{{/* Home only. Lives inside .closing alongside the footer so the two read as
+     one terminal block and one grid/fade runs continuously across both. */}}
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Contact</span><h2>Get in touch</h2></div>
+    <div class="rows">
+      <dl>
+        <dt>General</dt>
+        <dd><a href="mailto:{{ site.Params.contactEmail }}">{{ site.Params.contactEmail }}</a></dd>
+      </dl>
+      <dl>
+        <dt>Applications</dt>
+        <dd><a href="mailto:{{ site.Params.talentEmail }}">{{ site.Params.talentEmail }}</a></dd>
+      </dl>
+    </div>
+  </div>
+</section>

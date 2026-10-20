@@ -4,12 +4,11 @@ baseURL = "https://intelligencesecuritylaboratories.org/"
 # emits a WARN, which the "site builds cleanly" check treats as a failure.
 locale = "en-us"
 title = "Intelligence Security Laboratories"
-theme = "PaperMod"
 enableRobotsTXT = true
 enableEmoji = false
 
-# A four-page brochure site has no tags or categories; without this Hugo
-# publishes empty /tags/ and /categories/ pages.
+# A brochure site has no tags or categories; without this Hugo publishes
+# empty /tags/ and /categories/ pages.
 disableKinds = ["taxonomy", "term"]
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -20,54 +19,65 @@ disableKinds = ["taxonomy", "term"]
   headline     = "Building secure infrastructure for transformative AI"
   tagline      = "We are a nonprofit research lab focused on implementation-driven R&D for high-security AI systems. Our work bridges the gap between theoretical security requirements and practical deployments."
   contactEmail = "hello@intseclab.org"
+  talentEmail  = "talent@intseclab.org"
   footerLine1  = "501(c)(3) Nonprofit Organization"
   footerLine2  = "EIN 39-2886672"
 
   ashbyOrg     = "Intelligence-Security-Laboratories"
 
-  # The Blog link appears in the nav and footer only when this is non-empty.
-  # Leave it "" until the Substack publication is live, then paste the URL here.
-  substackURL  = ""
+  # Matches --ground in isl.css. Used for theme-color and the pinned-tab mask.
+  themeColor   = "#FDF2E6"
 
-  # ── Theme behaviour. Rarely changed. ──
-  defaultTheme            = "light"
-  disableThemeToggle      = true
-  disableAnchoredHeadings = true
-  ShowReadingTime         = false
-  ShowShareButtons        = false
-  ShowPostNavLinks        = false
-  ShowBreadCrumbs         = false
-  ShowCodeCopyButtons     = false
-  ShowWordCount           = false
-  disableScrollToTop      = true
-  hidemeta                = true
+  # The post list and subscribe box on /writing/ appear when this is non-empty.
+  substackURL  = "https://intseclab.substack.com/"
 
-  # Site-wide social card, relative to static/
-  images = ["og-card.png"]
+  # Landing-page hub cards. NOT CURRENTLY RENDERED — the landing page is the
+  # hero plus one link (see layouts/home.html). Kept because these titles are
+  # the page headings, and because design/landing-page-option-b.md plans to
+  # bring a version of this back once there is content to put in it.
+  [[params.hub]]
+    label = "About"
+    title = "What we are doing, and why"
+    url   = "/about/"
+    # Lead card: spans the hub row.
+    feature = true
+  [[params.hub]]
+    label = "Our Work"
+    title = "What we do and how"
+    url   = "/work/"
+  [[params.hub]]
+    label = "Writing"
+    title = "Publications and blog posts"
+    url   = "/writing/"
+  [[params.hub]]
+    label = "People"
+    title = "Meet our team"
+    url   = "/team/"
+  [[params.hub]]
+    label = "Careers"
+    title = "Open roles and applications"
+    url   = "/careers/"
 
-  [params.label]
-    text = "Intelligence Security Laboratories"
-
-  [params.assets]
-    disableHLJS             = true
-    favicon                 = "/favicon.ico"
-    favicon16x16            = "/favicon-16x16.png"
-    favicon32x32            = "/favicon-32x32.png"
-    apple_touch_icon        = "/apple-touch-icon.png"
-    safari_pinned_tab       = "/safari-pinned-tab.svg"
-    # Both match --isl-bg; without them PaperMod emits a dark #2e2e33 default.
-    theme_color             = "#FDF2E6"
-    msapplication_TileColor = "#FDF2E6"
-
+# Nav. Items whose page is a draft are skipped automatically in header.html,
+# so Our Work and Writing stay listed here and reappear when they go live.
 [menu]
   [[menu.main]]
-    identifier = "team"
-    name       = "Our Team"
-    url        = "/team/"
-    weight     = 10
-
+    name   = "About"
+    url    = "/about/"
+    weight = 10
   [[menu.main]]
-    identifier = "careers"
-    name       = "Careers"
-    url        = "/careers/"
-    weight     = 20
+    name   = "Our Work"
+    url    = "/work/"
+    weight = 20
+  [[menu.main]]
+    name   = "Writing"
+    url    = "/writing/"
+    weight = 30
+  [[menu.main]]
+    name   = "People"
+    url    = "/team/"
+    weight = 40
+  [[menu.main]]
+    name   = "Careers"
+    url    = "/careers/"
+    weight = 50

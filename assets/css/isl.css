@@ -1,0 +1,517 @@
+/* ISL — grid-paper design system. Replaces PaperMod entirely.
+
+   VERTICAL RHYTHM. Content sits on the 32px lattice, and it stays there only
+   because every vertical value is a whole module. Three rules:
+
+     1. Line boxes are n × --mod, set in px — never a ratio. Wrapping then
+        cannot break alignment: two lines is still 64px.
+     2. Vertical margins and padding are multiples of --mod. No rem, no em.
+     3. Borders come out of the adjacent padding. A 1px border on 64px padding
+        gives 65: use 63px + 1px.
+
+   One non-multiple offsets everything below it permanently. Watch for the
+   non-obvious ones: an inline-block inherits the line-height inside its own box
+   (see .label), and sitting on a baseline adds the strut's descender beneath it
+   (see .page-head).
+
+   scripts/check-lattice.mjs measures every block against the lattice. Run it
+   after touching any vertical value. */
+
+:root {
+  /* Brand palette, guidelines p.9. Only approved combinations. */
+  --ground:      #FDF2E6;  /* Off White  */
+  --raised:      #FDF2E6;
+  --ink:         #1F1E1B;  /* Soft Black */
+  --muted:       #57544D;
+  --accent:      #474A62;  /* Blue       */
+  --rule:        #D9CBB8;
+  --grid:        #F3E7D8;  /* 70% of the kit "Mid" value */
+  --band:        #2F3930;  /* Deep Green */
+  --band-ink:    #FDF2E6;
+  --band-accent: #BCC8AD;  /* Light Green */
+  --band-rule:   transparent;
+  --band-line:   rgba(253, 242, 230, 0.10);  /* grid on the band */
+
+  /* Grid module. Header height is pinned to 5 modules; see header below. */
+  --mod: 32px;
+  --measure: 30rem;
+  --measure-prose: 36rem;  /* 576px = 18 modules */
+  /* Inner width 928px = 29 modules, so 2-/3-col tracks land on 448/288. */
+  --shell: 62rem;
+  /* Grid phase, locked to the content column's left edge, not the viewport.
+     448 not 464: % positions resolve against (area − tile). */
+  --grid-x: max(var(--mod), calc(50% - 448px));
+
+  --display: "Algebra", Georgia, serif;
+  --body:    "Merriweather", Georgia, serif;
+}
+
+/* Dark. Blue is 1.9:1 on Soft Black and unusable, so the accent becomes
+   Light Green. The band stays green and lifts, staying recessive like the
+   light-mode band rather than inverting: a Light Green band was tried and
+   rejected — at 55% luminance against a 1.3% ground it glares, and it spends
+   the accent color on a background.
+
+   The brand defines no ramp, so these two are derived, not picked. Both sit
+   exactly on the Deep Green -> Light Green line:
+     --band       Deep Green + 15% Light Green   1.9:1 vs ground
+     --band-rule  Deep Green + 30% Light Green   1.7:1 vs band
+   Off-palette by necessity — Deep Green is 1.4:1 here and disappears. Needs
+   brand-owner sign-off. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #1F1E1B;
+    --raised:      #262521;
+    --ink:         #FDF2E6;
+    --muted:       #BFB6A8;
+    --accent:      #BCC8AD;
+    --rule:        #3A3832;
+    --grid:        #25241F;
+    --band:        #444E43;
+    --band-ink:    #FDF2E6;
+    --band-accent: #BCC8AD;
+    --band-rule:   #596456;
+  }
+}
+:root[data-theme="dark"] {
+  --ground:      #1F1E1B;
+  --raised:      #262521;
+  --ink:         #FDF2E6;
+  --muted:       #BFB6A8;
+  --accent:      #BCC8AD;
+  --rule:        #3A3832;
+  --grid:        #25241F;
+  --band:        #444E43;
+  --band-ink:    #FDF2E6;
+  --band-accent: #BCC8AD;
+  --band-rule:   #596456;
+}
+
+* { box-sizing: border-box; }
+
+/* Declared, not just implied by the variables above: it is what paints
+   scrollbars and native controls to match, and it is what an embedded
+   cross-origin iframe reads as prefers-color-scheme — so the Ashby board
+   follows our toggle rather than the OS. */
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* dvh below: iOS 100vh excludes the collapsing URL bar, so the closing block
+     sat under the fold and shifted while scrolling. */
+  font-family: var(--body);
+  font-size: 20px;
+  line-height: var(--mod);
+  color: var(--ink);
+  background-color: var(--ground);
+  /* Not repeating-linear-gradient: it sizes to the element, which makes
+     background-position inert. */
+  background-image:
+    linear-gradient(to right,  var(--grid) 0, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 0, var(--grid) 1px, transparent 1px);
+  background-size: var(--mod) var(--mod);
+  background-position: var(--grid-x) 0;
+}
+
+@supports (min-height: 100dvh) {
+  body { min-height: 100dvh; }
+}
+
+main { flex: 1 0 auto; }
+
+.wrap { max-width: var(--shell); margin: 0 auto; padding: 0 var(--mod); }
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 400;  /* Algebra ships one cut; never synthesize a bold. */
+  color: var(--accent);
+  text-wrap: balance;
+  margin: 0;
+}
+
+a { color: var(--accent); }
+/* External-link arrow. em, so it tracks whatever size it sits in. line-height:0
+   is load-bearing: the glyph falls back to a font whose metrics otherwise push
+   the line box past 32px, which took every paragraph with a link off the
+   lattice. The lift uses position, since vertical-align grows the box too. */
+.ext { font-size: 0.7em; line-height: 0; position: relative; top: -0.1em; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute; left: -9999px;
+  background: var(--ground); color: var(--accent);
+  padding: 0.5rem 0.9rem; border: 1px solid var(--accent); z-index: 20;
+}
+.skip:focus { left: var(--mod); top: 0.5rem; }
+
+/* Bordered label box — extends the memo/stationery vocabulary. */
+.label {
+  display: inline-block;
+  font-family: var(--body);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid var(--accent);
+  padding: 3px 9px; background: transparent;
+  line-height: 24px;  /* box = 32 with padding + border */
+}
+
+/* ── Header ───────────────────────────────────────────────────────────
+   25 top + 100 logo + 34 bottom + 1px border = 160 = 5 modules. The 25 and the
+   100 are fixed requirements; the 34 is the remainder. Mobile is 192 = 6. */
+.site-header {
+  position: relative;  /* mobile toggle is positioned out of flow */
+  border-bottom: 1px solid var(--rule);
+  background: var(--ground);
+}
+.bar {
+  max-width: var(--shell); margin: 0 auto;
+  padding: 25px var(--mod) 34px;  /* +1px border = 160 */
+  /* Column gap only: a row gap lands between wrapped rows and is not a whole
+     module, which knocks every block below the header off the lattice. */
+  display: flex; align-items: center; gap: 0 1.25rem; flex-wrap: wrap;
+}
+/* 415px basis = 100px tall at the lockup's 1328:320 ratio. Basis must be
+   definite, or the SVG's % width resolves against a parent sized by the SVG.
+   Ratio comes from the SVG's width/height attributes, not aspect-ratio. */
+.bar .logo { display: block; flex: 0 1 415px; line-height: 0; cursor: pointer; }
+.bar .logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--accent);
+  /* SVG hit-testing only fires on painted geometry, so the pointer alternated
+     between <path> (letter strokes) and <svg> (gaps), re-resolving the cursor
+     each time. Let the anchor own the whole rectangle. */
+  pointer-events: none;
+}
+
+/* Column gap only, as with .bar: a row gap between wrapped nav lines is not a
+   whole module. */
+/* margin-right clears the out-of-flow theme button: 2 modules covers its 31px
+   box plus the gap it used to sit behind. */
+.site-nav {
+  display: flex; gap: 0 1.5rem; flex-wrap: wrap;
+  margin-left: auto; margin-right: calc(var(--mod) * 2);
+}
+/* Padded to a ~40px target: an 18px box meant ordinary vertical drift crossed
+   the edge and the cursor flickered. The rule is text-decoration, not a border,
+   so it stays tight to the text however tall the target gets. */
+.site-nav a {
+  display: flex; align-items: center;
+  padding: 16px 0;
+  font-size: 13px; color: var(--ink); cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* Out of flow at every width, not just mobile. In flow it is the last item on a
+   wrapping flex line, so at narrow-desktop widths it dropped to a second row
+   and added its own height — 31px, not a module — which knocked every block
+   below the header off the lattice. Out of flow the bar is logo + nav only, and
+   the header height is the logo's 100px plus its padding at every width.
+   The nav's right margin reserves the space it used to occupy. */
+.theme-btn {
+  position: absolute; right: var(--mod); top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent); background: transparent;
+  border: 0; padding: 8px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.theme-btn:hover { color: var(--ink); }
+/* The icon names the destination, not the current state: a moon in light mode
+   means "go dark". */
+.theme-btn .tb-ico { display: none; }
+.theme-btn .tb-moon { display: block; }
+:root[data-theme="dark"] .theme-btn .tb-moon { display: none; }
+:root[data-theme="dark"] .theme-btn .tb-sun { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-btn .tb-moon { display: none; }
+  :root:not([data-theme="light"]) .theme-btn .tb-sun { display: block; }
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+section { padding: calc(var(--mod) * 2) 0 63px; border-bottom: 1px solid var(--rule); }
+section:last-of-type { border-bottom: 0; padding-bottom: calc(var(--mod) * 2); }
+/* Column, so the label sits above the heading. align-items rather than baseline
+   also sidesteps the strut descender a baseline row adds under the label. */
+.sec-head {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+  margin-bottom: var(--mod);
+}
+.sec-head h2 { font-size: 1.6rem; }
+
+/* The hero frames the first screen: it fills the viewport below the header, so
+   the closing band sits under the fold instead of showing on load.
+
+   round(up, …) keeps it on the lattice — the hero becomes the next whole module
+   past the available height, which also guarantees nothing below it peeks.
+   Rounding down would leave up to 31px of the band showing.
+
+   --header-h is set by the script in footer.html, because the header is 160px
+   at most widths but 224px where the nav wraps. The plain calc() first is the
+   fallback for no-JS and for browsers without round(): right height, off the
+   lattice. */
+.hero {
+  padding: calc(var(--mod) * 3) 0 63px;
+  border-bottom: 1px solid var(--rule);
+  min-height: calc(100dvh - var(--header-h, 160px));
+  min-height: calc(round(up, 100dvh - var(--header-h, 160px), var(--mod)));
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 5.2vw, 3rem);
+  line-height: calc(var(--mod) * 2); letter-spacing: -0.015em; max-width: 22ch;
+}
+/* Deck treatment: subordinate to the headline. Full-strength ink was rejected. */
+.hero p {
+  max-width: var(--measure); font-size: 22px;
+  line-height: var(--mod); color: var(--muted); margin: var(--mod) 0 0;
+}
+/* The only route off the landing page besides the nav, so it reads as link
+   rather than deck: accent colour, not --muted. */
+.hero p.hero-more { font-size: 1.125rem; color: var(--accent); }
+
+.page-head {
+  padding: calc(var(--mod) * 2) 0 0;
+  /* flex column: no line box, so the label contributes exactly its own 32px
+     with no baseline descender under it */
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.page-head h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: calc(var(--mod) * 2); margin-top: 0; }
+
+/* Standfirst under the H1, as a display statement. Ink, not accent: the H1 is
+   already accent Algebra, so matching it read as a second heading. */
+.page-lede { max-width: min(46rem, 100%); margin-top: var(--mod); }
+.page-lede p {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: var(--mod);
+  color: var(--ink);
+}
+
+/* Wider than --measure: the page lede runs to 46rem, so a 30rem body left the
+   right half of the page empty and the two did not read as one column.
+   36rem = 576px = 18 modules. */
+.prose { max-width: var(--measure-prose); }
+/* Card pages need the full shell — the reading measure would squeeze the grid
+   to two columns. Text children keep the measure so prose stays readable. */
+.prose.wide { max-width: none; }
+.prose.wide > p,
+.prose.wide > ul,
+.prose.wide > ol { max-width: var(--measure-prose); }
+.prose p { margin: 0 0 var(--mod); }
+.prose p:last-child { margin-bottom: 0; }
+/* Direct children only: these margins are for body copy. Card, person and pub
+   headings are nested and set their own spacing. */
+.prose > h2 { font-size: 1.5rem; line-height: var(--mod); margin: calc(var(--mod) * 2) 0 var(--mod); }
+.prose > h3 { font-size: 1.25rem; line-height: var(--mod); margin: var(--mod) 0 var(--mod); }
+.prose ul, .prose ol { max-width: var(--measure-prose); padding-left: 1.2rem; }
+.prose li { margin: 0; }
+
+.isl-callout {
+  border-left: 2px solid var(--rule);
+  padding: 0 0 0 var(--mod);
+  margin: calc(var(--mod) * 2) 0; max-width: var(--measure);
+}
+.isl-callout h3 { font-size: 1.125rem; line-height: var(--mod); margin-bottom: 0; }
+.isl-callout p { margin-bottom: var(--mod); }
+.isl-callout p:last-child { margin-bottom: 0; }
+
+/* ── Hub cards ────────────────────────────────────────────────────── */
+.hub, .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--mod);
+}
+.hub a {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--rule); background: var(--raised);
+  padding: 31px;  /* +1px border = 32 */
+  text-decoration: none; color: var(--ink);
+}
+.hub a:hover { border-color: var(--accent); }
+/* One module between label and title. Has to be a whole module, so the card is
+   5 modules with the gap where the blurb used to be rather than 4 without it. */
+.hub .label { align-self: flex-start; }
+/* Scoped, not on .label itself — the same box is used in page heads, contact
+   and project cards. 12px still sits in the 24px line-height, so the bordered
+   box stays 32 and the card height is unaffected. */
+.hub .label { font-size: 12px; }
+
+/* No margin under the label. A margin would have to be a whole module, and 32px
+   read as a gap; the title's own two-module line box puts ~15px of half-leading
+   above the type instead, which is the space you actually want. Costs nothing:
+   label 32 + line box 64 is the same 96 as label 32 + margin 32 + box 32. */
+/* 1.5rem, not 2: at 32px the longer titles ("Publications and blog posts",
+   "Open roles and applications") wrapped to two lines in a 448px column, which
+   made the four secondary cards taller than the lead card. */
+.hub h2 {
+  font-size: 1.5rem;
+  line-height: calc(var(--mod) * 2);
+  margin-bottom: 0;
+}
+.hub p { margin: 0; font-size: 16px; line-height: var(--mod); color: var(--muted); }
+
+/* Two even columns, so the four secondary cards form a 2x2 block instead of
+   the 3-then-1 orphan a 3-wide track gives. 22rem min caps it at two columns
+   inside the 61rem shell; min() lets it collapse to one on narrow screens. */
+.hub { grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); }
+
+/* Lead card spans the row, so the hub reads as a hierarchy rather than five
+   identical tiles. No arrow CTAs: the whole card is the link. */
+.hub a.feature { grid-column: 1 / -1; }
+/* Lead card: one step up again, so the hierarchy survives having no blurb.
+   Line box inherited from .hub h2, so the card height matches the others. */
+.hub a.feature h2 { font-size: 2.5rem; }
+.hub a.feature p { max-width: var(--measure); }
+
+/* Centered contents, lead card only — the four secondary cards stay left
+   aligned, so the centering reads as emphasis rather than as the hub's style.
+   Alignment only: the card is still 929x160, five modules, as before.
+   margin-inline on the blurb because its max-width would otherwise hold it
+   left; align-self on the label because the card is a flex column. */
+.hub a.feature { text-align: center; }
+.hub a.feature .label { align-self: center; }
+.hub a.feature p { margin-inline: auto; }
+
+.card {
+  border: 1px solid var(--rule); background: var(--raised);
+  padding: 31px;
+}
+.card h2 { font-size: 1.25rem; margin-bottom: 0; }
+.card p { margin: 0; font-size: 16px; line-height: var(--mod); color: var(--muted); }
+
+/* box-sizing puts borders inside the box, so a 448px card draws its right
+   border at 447-448 while the grid line sits at 448-449 — adjacent, reading as
+   one 2px rule. The left border coincides with its line, hence the asymmetry.
+   -1px pulls the right border onto the line; the overhang sits in the gutter. */
+.hub a, .card { margin-right: -1px; }
+
+/* ── People ───────────────────────────────────────────────────────── */
+.people {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--mod);
+}
+.person { border-top: 2px solid var(--accent); padding-top: 30px; }
+.person h2 { font-size: 1.05rem; }
+.person .role {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 var(--mod);
+}
+/* Ink, not muted: the bios are this page's body copy, and the role label above
+   them is muted, so the card needs the two to differ. */
+.person p { margin: 0 0 var(--mod); font-size: 16px; line-height: var(--mod); color: var(--ink); }
+.person p:last-child { margin-bottom: 0; }
+
+/* ── Writing ──────────────────────────────────────────────────────── */
+.pub { border-top: 1px solid var(--rule); padding-top: 31px; margin-top: calc(var(--mod) * 2); }
+.pub h3 { font-size: 1.125rem; line-height: var(--mod); }
+.pub .meta { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; margin: 0; }
+.isl-substack-more { margin: var(--mod) 0 0; font-size: 16px; }
+
+/* Substack subscribe widget. 320px = 10 modules, so the iframe stays on the
+   lattice. Its interior is cross-origin and cannot be styled from here. */
+.isl-substack-embed { margin: calc(var(--mod) * 2) 0 0; max-width: 480px; }
+.isl-substack-embed iframe {
+  display: block; width: 100%; height: 320px;
+  border: 1px solid var(--rule); background: #fff;
+}
+
+/* ── Closing block ────────────────────────────────────────────────────
+   Contact band + footer as one region. Pinned to the viewport bottom by the
+   flex column on body, so short pages don't end the green mid-screen. */
+.closing {
+  position: relative;
+  background: var(--band);
+  color: var(--band-ink);
+  border-top: 1px solid var(--band-rule);
+}
+.closing > * { position: relative; z-index: 1; }
+
+/* Grid fading upward: strongest at the page's bottom edge, gone by the top.
+   position y=100% anchors rows to the bottom, so the bottom row is always
+   whole and the partial one lands under the fade. */
+.closing::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(to right,  var(--band-line) 0, var(--band-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--band-line) 0, var(--band-line) 1px, transparent 1px);
+  background-size: var(--mod) var(--mod);
+  background-position: var(--grid-x) 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 8%, transparent 84%);
+          mask-image: linear-gradient(to top, #000 0%, #000 8%, transparent 84%);
+}
+
+.contact {
+  border-bottom: 0;
+  padding: calc(var(--mod) * 2) 0;
+}
+.contact h2 { color: var(--band-ink); }
+.contact .label { color: var(--band-accent); border-color: var(--band-accent); }
+.contact a { color: var(--band-ink); }
+.contact .rows {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--mod);
+}
+/* The UA gives <dl> 1em top and bottom, which put 40px — not a module — inside
+   the band and left it 8px off the lattice. */
+.contact dl { margin: 0; }
+.contact dt {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--band-accent); margin-bottom: 0;
+}
+.contact dd { margin: 0; font-size: 20px; line-height: var(--mod); }
+
+/* ── Footer ── sits inside .closing, so it inherits the band ── */
+.site-footer .wrap { padding-top: var(--mod); padding-bottom: var(--mod); }
+.site-footer p { margin: 0; font-size: 12px; color: var(--band-accent); text-align: center; }
+
+/* ── Ashby embed ──────────────────────────────────────────────────── */
+.isl-careers-fallback { margin-top: 1.5rem; font-size: 14px; }
+
+@media (max-width: 680px) {
+  /* var(--mod), not 1rem: at 16px the logo sat left of the content edge and off
+     the grid, which both start at 32px. */
+  /* 32 + 48 logo + 64 nav + 15 + 1px border = 160 = 5 modules, same as desktop.
+     15 not 47 (which would also land on the lattice) because the nav rows are
+     64px tall for touch: their own 16px padding plus 15 gives 31px under the nav
+     text, balancing the 32 above the logo. 47 left the header bottom-heavy. */
+  .bar { padding: var(--mod) var(--mod) 15px; gap: 0 1rem; }
+  /* 230px ≈ 55px tall. The 100px spec is a desktop instruction; at full size the
+     lockup is 91% of a 375px viewport. */
+  .bar .logo { flex: 0 0 199px; }  /* 48px tall */
+  /* basis 100% puts nav on its own row; the toggle rides the logo row. */
+  /* No right margin here: the nav has its own row, so it never meets the
+     button. */
+  .site-nav { margin-left: 0; margin-right: 0; flex: 1 1 100%; gap: 0 1rem; }
+  /* Pinned to the logo row rather than centred, since the bar is two rows. */
+  .theme-btn { top: var(--mod); transform: none; min-height: 44px; }
+}
+
+/* Touch targets keyed to input type, not width — tablets sit above the 680px
+   breakpoint but are still finger-driven. */
+@media (pointer: coarse) {
+  .theme-btn { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

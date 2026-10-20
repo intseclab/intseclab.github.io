@@ -1,5 +1,10 @@
 ---
 title: "Careers"
+description: >-
+  Open roles at ISL. We hire for depth in high-assurance disciplines, and welcome people from aviation, nuclear and other fail-safe fields.
+heading: "Open roles and applications"
+# The board is 720px wide; the reading measure would squeeze it to ~544px.
+wide: true
 ---
 
 ISL is a nonprofit research lab building secure infrastructure for

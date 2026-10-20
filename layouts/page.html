@@ -1,0 +1,15 @@
+{{ define "main" }}
+<div class="wrap">
+  <div class="page-head">
+    <span class="label">{{ .Params.label | default .Title }}</span>
+    <h1>{{ .Params.heading | default .Title }}</h1>
+    {{- with .Params.lede }}
+    {{/* Standfirst. #pagelede is a hook for the dev-only treatment panel. */}}
+    <div class="page-lede" id="pagelede"><p>{{ . }}</p></div>
+    {{- end }}
+  </div>
+  <section>
+    <div class="prose{{ if .Params.wide }} wide{{ end }}">{{ .Content }}</div>
+  </section>
+</div>
+{{ end }}

@@ -1,0 +1,51 @@
+{{/*
+  Substack posts, fetched at build time and rendered as native markup — not an
+  iframe — so they take the site's fonts, palette, dark mode and lattice, sit in
+  the HTML for search engines, and work with JavaScript disabled.
+
+  Posts appear on the next build. A daily cron in .github/workflows/deploy.yml
+  handles that; workflow_dispatch forces it sooner. Substack has no publish
+  webhook, so any freshness is a poll.
+
+  Renders nothing until params.substackURL is set. A network or feed error warns
+  and falls back to the Substack link: a broken feed must never fail the build.
+
+  Params: count (default 6), heading (default "Blog").
+*/}}
+{{- with site.Params.substackURL }}
+  {{- $base := strings.TrimSuffix "/" . }}
+  {{- $count := int ($.Get "count" | default 6) }}
+  {{- $heading := $.Get "heading" | default "Blog" }}
+  {{- $feed := printf "%s/feed" $base }}
+  {{- $items := slice }}
+  {{- $failed := false }}
+  {{- with try (resources.GetRemote $feed) }}
+    {{- with .Err }}
+      {{- warnf "substack: could not fetch %s: %s" $feed . }}
+      {{- $failed = true }}
+    {{- else with .Value }}
+      {{- with (. | transform.Unmarshal).channel }}
+        {{/* Absent on a publication with no posts. One <item> unmarshals to a
+             map, several to a slice; `first` needs a slice either way. */}}
+        {{- with .item }}
+          {{- $items = cond (reflect.IsSlice .) . (slice .) }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{/* Nothing renders on an empty publication: a lone heading or a lone
+       "read more" link would attach itself to whatever sits above. The link
+       still shows on a fetch failure, so a broken feed leaves a route out. */}}
+  {{- if or $items $failed }}
+    {{- with $items }}
+      {{- with $heading }}<h2>{{ . }}</h2>{{ end }}
+      {{- range first $count . }}
+      <div class="pub">
+        <h3><a href="{{ .link }}">{{ .title }}</a></h3>
+        <p class="meta">{{ with .pubDate }}{{ dateFormat "2 January 2006" . }}{{ end }}</p>
+      </div>
+      {{- end }}
+    {{- end }}
+    <p class="isl-substack-more"><a href="{{ $base }}">Read on Substack &rarr;</a></p>
+  {{- end }}
+{{- end }}

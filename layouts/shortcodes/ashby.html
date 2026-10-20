@@ -1,7 +1,23 @@
-{{- $org := .Site.Params.ashbyOrg -}}
+{{/*
+  Ashby job board embed. Cross-origin iframe, so page CSS cannot reach it.
+
+  Styling comes from the copy of static/ashby/job-board.css pasted into the
+  Ashby console. customCssUrl below is passed through to the iframe URL but
+  Ashby does not load it — tested with a reachable stylesheet and nothing
+  fetched it. Kept in case that changes; it is not the live mechanism.
+*/}}
+{{- $org := site.Params.ashbyOrg -}}
 {{- $board := printf "https://jobs.ashbyhq.com/%s" $org -}}
 <div id="ashby_embed"></div>
 <script>
+  window.__Ashby = {
+    settings: {
+      ashbyBaseJobBoardUrl: {{ $board }},
+      customCssUrl: {{ "ashby/job-board.css" | absURL }},
+      autoScroll: false
+    }
+  };
+  {{/* Legacy global, still read by the embed as a fallback. */}}
   window.__ashbyBaseJobBoardUrl = {{ $board }};
 </script>
 <script id="ashby-script" src="{{ printf "%s/embed?version=2" $board }}"></script>

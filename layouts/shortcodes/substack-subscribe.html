@@ -1,0 +1,22 @@
+{{/*
+  Substack's subscribe widget, in an iframe. Always current, no rebuild needed.
+
+  It is a signup form only — publication name, tagline, and an email field. It
+  does not list posts, and Substack has no embed that does: the publication
+  homepage sends frame-ancestors 'self', so it cannot be framed here either.
+  Use the `substack` shortcode for a post list.
+
+  Being cross-origin, the widget keeps Substack's own fonts and white ground.
+  That cannot be styled from this side.
+
+  Renders nothing until params.substackURL is set.
+*/}}
+{{- with site.Params.substackURL }}
+  {{- $src := printf "%s/embed" (strings.TrimSuffix "/" .) }}
+  <div class="isl-substack-embed">
+    <iframe src="{{ $src }}"
+            title="Subscribe to the ISL newsletter on Substack"
+            loading="lazy"
+            scrolling="no"></iframe>
+  </div>
+{{- end }}

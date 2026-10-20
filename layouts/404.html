@@ -1,0 +1,21 @@
+{{/* GitHub Pages serves this for any unknown path. Links are root-relative
+     because it renders at whatever URL the visitor mistyped. */}}
+{{ define "main" }}
+<div class="wrap">
+  <div class="page-head">
+    <span class="label">404</span>
+    <h1>Page not found</h1>
+  </div>
+  <section>
+    <div class="prose">
+      <p>That page does not exist. It may have moved, or the link may be wrong.</p>
+      <p>
+        <a href="{{ "" | relLangURL }}">Home</a>
+        {{- range site.Menus.main }} &middot;
+        <a href="{{ .URL | relLangURL }}">{{ .Name }}</a>
+        {{- end }}
+      </p>
+    </div>
+  </section>
+</div>
+{{ end }}
