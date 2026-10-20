@@ -45,6 +45,9 @@
   --isl-accent: #474A62;
   --isl-border: #D9CBB8;
   --isl-onaccent: #FDF2E6;
+  --isl-accent-hover: #3B3D4D;  /* Blue dimmed 30% toward Soft Black */
+  --isl-field-hover:  #F3E7D8;
+  --isl-card-hover:   #FFFCF8;
   --isl-overlay: rgba(253, 242, 230, 0.92);
 
   --colorAppBackground: var(--isl-ground);
@@ -56,9 +59,10 @@
 
   --fontFamily: "Merriweather", Georgia, "Times New Roman", serif;
 
-  --borderRadiusContainer: 3px;
-  --borderRadiusControl: 3px;
-  --borderRadiusButton: 3px;
+  /* Square, like every card and label on the site. */
+  --borderRadiusContainer: 0;
+  --borderRadiusControl: 0;
+  --borderRadiusButton: 0;
 
   --widthMaxJobBoard: 720px;
 
@@ -83,6 +87,11 @@
     --isl-accent: #BCC8AD;
     --isl-border: #3A3832;
     --isl-onaccent: #1F1E1B;
+    /* A dimmer green, not --isl-ink: ink is off-white here, so hover flashed
+       the button almost white. */
+    --isl-accent-hover: #A8B59C;
+    --isl-field-hover:  #302E29;
+    --isl-card-hover:   #302E29;
     --isl-overlay: rgba(31, 30, 27, 0.92);
 
     --colorPrimary900: #BCC8AD !important;
@@ -127,9 +136,12 @@ body {
    Ashby leaves these transparent for its own white page. Cards get a border and
    sit at ground, like the site's; controls get --isl-field so they look
    operable. */
+/* !important on the border only: Ashby forces border-width to 0 on these, so
+   the cards were rendering with no outline at all. The other borders in this
+   file do not need it. */
 .ashby-job-posting-brief {
   background-color: var(--isl-raised);
-  border: 1px solid var(--isl-border);
+  border: 1px solid var(--isl-border) !important;
   color: var(--isl-ink);
 }
 
@@ -150,6 +162,9 @@ select.ashby-job-board-filter {
 }
 
 .ashby-job-posting-brief { margin-bottom: 10px; }
+
+/* Card hover. Ashby's own is a cold near-white, which glares in dark mode. */
+.ashby-job-posting-brief:hover { background-color: var(--isl-card-hover); }
 
 /* Compensation line. Ashby's own slate (#545B6D) is ~2.2:1 on our dark ground
    and it carries no ashby-* class, so target it by position in the card. */
@@ -191,6 +206,16 @@ select.ashby-job-board-filter {
   color: var(--isl-faint);
 }
 
+/* Upload File. Ashby colours the inner span near-white for its own dark button,
+   which left the label at 1.1:1 on ours — the descendant selector is what
+   reaches it. */
+button[class*="_secondary_"],
+button[class*="_secondary_"] * {
+  color: var(--isl-faint);
+}
+
+button[class*="_secondary_"] { border-radius: 0; }
+
 input[type="file"] {
   font-family: inherit;
   color: var(--isl-ink);
@@ -200,7 +225,6 @@ input[type="file"]::file-selector-button {
   font-family: inherit;
   background-color: transparent;
   border: 1px solid var(--isl-border);
-  border-radius: 3px;
   color: var(--isl-ink);
 }
 
@@ -208,12 +232,10 @@ input[type="file"]::file-selector-button {
 .ashby-application-form-submit-button {
   background-color: var(--isl-accent);
   color: var(--isl-onaccent);
-  border-radius: 3px;
   font-family: "Merriweather", Georgia, "Times New Roman", serif;
 }
 
 .ashby-job-board-back-to-all-jobs-button {
-  border-radius: 3px;
   font-family: "Merriweather", Georgia, "Times New Roman", serif;
   color: var(--isl-accent);
 }
@@ -255,10 +277,20 @@ footer, footer [class] { color: var(--isl-faint); }
 button[class*="_button_"][class*="_primary_"] {
   background-color: var(--isl-accent);
   color: var(--isl-onaccent);
+  border-radius: 0;
 }
 
 /* Hover. Needed because both of Ashby's primary tokens are pinned above, so
    their own hover swap has nothing left to change. */
-button[class*="_button_"][class*="_primary_"]:hover {
-  background-color: var(--isl-ink);
+button[class*="_button_"][class*="_primary_"]:hover,
+.ashby-application-form-submit-button:hover {
+  background-color: var(--isl-accent-hover);
+}
+
+/* Secondary buttons: Upload File, and the Yes/No toggles. Ashby hovers these to
+   a blue-grey from its own palette. :not(_active_) leaves a selected toggle
+   alone, since that state paints itself. */
+button[class*="_button_"][class*="_secondary_"]:not([class*="_active_"]):hover,
+.ashby-application-form-field-entry button:not([class*="_active_"]):hover {
+  background-color: var(--isl-field-hover);
 }

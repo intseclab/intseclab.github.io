@@ -8,3 +8,5 @@
   {{- with .Title }} title="{{ . }}"{{ end }}
   {{- if $ext }} target="_blank" rel="noopener"{{ end -}}
 >{{ .Text }}{{ if $ext }}&nbsp;<span class="ext">&#8599;</span>{{ end }}</a>
+{{- /* No trailing newline: it renders as a space before any punctuation that
+       follows the link. */ -}}
