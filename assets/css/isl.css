@@ -89,6 +89,16 @@
 
 * { box-sizing: border-box; }
 
+/* Declared, not just implied by the variables above: it is what paints
+   scrollbars and native controls to match, and it is what an embedded
+   cross-origin iframe reads as prefers-color-scheme — so the Ashby board
+   follows our toggle rather than the OS. */
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
