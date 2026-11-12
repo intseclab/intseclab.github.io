@@ -11,9 +11,11 @@
       <p>That page does not exist. It may have moved, or the link may be wrong.</p>
       <p>
         <a href="{{ "" | relLangURL }}">Home</a>
-        {{- range site.Menus.main }} &middot;
+        {{- /* Same draft gating as the nav: a menu entry whose page is not
+               built would send a lost visitor to another 404. */ -}}
+        {{- range site.Menus.main }}{{ if site.GetPage .URL }} &middot;
         <a href="{{ .URL | relLangURL }}">{{ .Name }}</a>
-        {{- end }}
+        {{- end }}{{ end }}
       </p>
     </div>
   </section>
